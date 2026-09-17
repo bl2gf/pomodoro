@@ -7,7 +7,6 @@
 
     <title>Pomodoro Tracker</title>
 
-    <!-- Handwritten Google Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
@@ -23,39 +22,40 @@
 
     <main class="app">
 
-        <!-- Page title -->
+        <!-- HEADER -->
+
         <header class="page-header">
+
             <h1>Pomodoro ♡</h1>
+
+            <p class="small-message">
+                small steps<br>
+                big things ♡
+            </p>
+
         </header>
 
 
-        <!-- =====================================
-             BIG TOMATO TIMER
-        ====================================== -->
+        <!-- BIG TOMATO TIMER -->
 
         <section class="tomato">
 
-            <!-- Tomato leaves -->
             <div class="tomato-leaves">
 
                 <div class="leaf leaf-left"></div>
-
                 <div class="leaf leaf-middle-left"></div>
 
                 <div class="stem"></div>
 
                 <div class="leaf leaf-middle-right"></div>
-
                 <div class="leaf leaf-right"></div>
 
             </div>
 
 
-            <!-- Tomato highlight -->
             <div class="tomato-highlight"></div>
 
 
-            <!-- Timer content -->
             <div class="tomato-content">
 
                 <h2 id="modeDisplay">
@@ -63,7 +63,6 @@
                 </h2>
 
 
-                <!-- Editable timer -->
                 <div class="timer-editor">
 
                     <button
@@ -91,7 +90,6 @@
                 </div>
 
 
-                <!-- Timer buttons -->
                 <div class="controls">
 
                     <button id="startButton">
@@ -109,84 +107,116 @@
         </section>
 
 
-        <!-- =====================================
-             CURRENT TASK
-        ====================================== -->
+        <!-- FALLING TOMATO -->
 
-        <section class="task-section">
+        <div id="fallingTomatoArea"></div>
 
-            <label for="taskInput">
-                What are you working on?
-            </label>
 
-            <input
-                type="text"
-                id="taskInput"
-                placeholder="e.g. LeetCode matrix practice"
+        <!-- BASKET -->
+
+        <section class="basket-section">
+
+            <div
+                id="basket"
+                class="basket"
             >
 
-        </section>
+                <div id="basketTomatoes"></div>
 
+                <div class="basket-handle"></div>
 
-        <!-- =====================================
-             DASHBOARD
-        ====================================== -->
+                <div class="basket-rim"></div>
 
-        <section class="dashboard">
+                <div class="basket-body">
 
+                    <div class="basket-pattern"></div>
 
-            <!-- Today's Pomodoros -->
-            <div class="progress-section">
+                    <div class="basket-label">
+                        Today's<br>
+                        Pomodoros ♡
+                    </div>
 
-                <h3>Today's Pomodoros</h3>
-
-                <div id="tomatoTracker">
-                    No pomodoros completed yet!
                 </div>
-
-                <p>
-                    Completed:
-                    <span id="completedCount">0</span>
-                </p>
 
             </div>
 
 
-            <!-- Session History -->
-            <div class="history-section">
-
-                <h3>Today's Sessions</h3>
-
-                <div id="sessionHistory">
-                    No sessions yet!
-                </div>
-
-                <p id="totalFocusTime">
-                    Total focus time: 0 minutes
-                </p>
-
-            </div>
+            <p class="basket-count">
+                Completed:
+                <span id="completedCount">0</span>
+            </p>
 
         </section>
 
 
-        <!-- Little decorative messages -->
+        <!-- SESSION HISTORY -->
 
-        <div class="encouragement encouragement-left">
-            you<br>
-            can<br>
-            do<br>
-            this<br>
-            ♡
-        </div>
+        <section class="history-section">
 
-        <div class="encouragement encouragement-right">
-            small steps<br>
-            big things<br>
-            ♡
-        </div>
+            <h3>Today's Sessions</h3>
+
+            <div id="sessionHistory">
+                No sessions yet ♡
+            </div>
+
+            <p id="totalFocusTime">
+                Total focus time: 0 minutes
+            </p>
+
+        </section>
+
+
+        <p class="bottom-message">
+            you can do this ♡
+        </p>
 
     </main>
+
+
+    <!-- ACCOMPLISHMENT MODAL -->
+
+    <div
+        id="accomplishmentModal"
+        class="modal-overlay hidden"
+    >
+
+        <div class="accomplishment-card">
+
+            <div class="mini-tomato">
+
+                <div class="mini-leaf"></div>
+
+                <div class="mini-face">
+                    ◡
+                </div>
+
+            </div>
+
+
+            <h2>
+                You did it! ♡
+            </h2>
+
+
+            <label for="accomplishmentInput">
+                What did you accomplish?
+            </label>
+
+
+            <textarea
+                id="accomplishmentInput"
+                placeholder="e.g. Finished three LeetCode problems..."
+                maxlength="200"
+            ></textarea>
+
+
+            <button id="saveAccomplishmentButton">
+                Add to Basket 🍅
+            </button>
+
+        </div>
+
+    </div>
 
 
     <script src="script.js"></script>

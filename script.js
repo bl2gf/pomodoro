@@ -15,39 +15,75 @@ const resetButton =
     document.getElementById("resetButton");
 
 const increaseTimeButton =
-    document.getElementById("increaseTimeButton");
+    document.getElementById(
+        "increaseTimeButton"
+    );
 
 const decreaseTimeButton =
-    document.getElementById("decreaseTimeButton");
-
-const taskInput =
-    document.getElementById("taskInput");
-
-const tomatoTracker =
-    document.getElementById("tomatoTracker");
+    document.getElementById(
+        "decreaseTimeButton"
+    );
 
 const completedCount =
-    document.getElementById("completedCount");
+    document.getElementById(
+        "completedCount"
+    );
 
 const sessionHistory =
-    document.getElementById("sessionHistory");
+    document.getElementById(
+        "sessionHistory"
+    );
 
 const totalFocusTime =
-    document.getElementById("totalFocusTime");
+    document.getElementById(
+        "totalFocusTime"
+    );
+
+const fallingTomatoArea =
+    document.getElementById(
+        "fallingTomatoArea"
+    );
+
+const basketTomatoes =
+    document.getElementById(
+        "basketTomatoes"
+    );
+
+const basket =
+    document.getElementById(
+        "basket"
+    );
+
+
+// Modal
+
+const accomplishmentModal =
+    document.getElementById(
+        "accomplishmentModal"
+    );
+
+const accomplishmentInput =
+    document.getElementById(
+        "accomplishmentInput"
+    );
+
+const saveAccomplishmentButton =
+    document.getElementById(
+        "saveAccomplishmentButton"
+    );
 
 
 // =========================================
 // TIMER SETTINGS
 // =========================================
 
-// Load saved focus duration.
-// Default = 25 minutes.
-
 let focusMinutes =
-    Number(localStorage.getItem("focusMinutes")) || 25;
+    Number(
+        localStorage.getItem(
+            "focusMinutes"
+        )
+    ) || 25;
 
-
-// We'll make this editable later.
 
 const breakMinutes = 5;
 
@@ -65,19 +101,65 @@ let isRunning = false;
 
 let isFocusMode = true;
 
+let waitingForAccomplishment =
+    false;
+
 
 // =========================================
-// SESSION HISTORY
+// SAVED SESSIONS
 // =========================================
 
 let sessions =
     JSON.parse(
-        localStorage.getItem("pomodoroSessions")
+        localStorage.getItem(
+            "pomodoroSessions"
+        )
     ) || [];
 
 
-let pomodorosCompleted =
-    sessions.length;
+// =========================================
+// IDLE MOVEMENT STATE
+// =========================================
+
+let idleMovementTimeout = null;
+
+
+// =========================================
+// GET TODAY'S SESSIONS
+// =========================================
+
+function getTodaysSessions() {
+
+    const today =
+        new Date();
+
+
+    return sessions.filter(
+        function (session) {
+
+            const sessionDate =
+                new Date(
+                    session.completedAt
+                );
+
+
+            return (
+                sessionDate.getFullYear() ===
+                    today.getFullYear()
+
+                &&
+
+                sessionDate.getMonth() ===
+                    today.getMonth()
+
+                &&
+
+                sessionDate.getDate() ===
+                    today.getDate()
+            );
+        }
+    );
+}
 
 
 // =========================================
@@ -87,14 +169,20 @@ let pomodorosCompleted =
 function updateDisplay() {
 
     const minutes =
-        Math.floor(timeLeft / 60);
+        Math.floor(
+            timeLeft / 60
+        );
+
 
     const seconds =
         timeLeft % 60;
 
 
     const formattedSeconds =
-        String(seconds).padStart(2, "0");
+        String(seconds).padStart(
+            2,
+            "0"
+        );
 
 
     timerDisplay.textContent =
@@ -103,14 +191,18 @@ function updateDisplay() {
 
 
 // =========================================
-// INCREASE FOCUS TIME
+// INCREASE TIME
 // =========================================
 
 increaseTimeButton.addEventListener(
     "click",
     function () {
 
-        if (isRunning || !isFocusMode) {
+        if (
+            isRunning ||
+            !isFocusMode ||
+            waitingForAccomplishment
+        ) {
             return;
         }
 
@@ -130,7 +222,7 @@ increaseTimeButton.addEventListener(
 
 
 // =========================================
-// DECREASE FOCUS TIME
+// DECREASE TIME
 // =========================================
 
 decreaseTimeButton.addEventListener(
@@ -140,6 +232,7 @@ decreaseTimeButton.addEventListener(
         if (
             isRunning ||
             !isFocusMode ||
+            waitingForAccomplishment ||
             focusMinutes <= 1
         ) {
             return;
@@ -181,6 +274,13 @@ startButton.addEventListener(
     "click",
     function () {
 
+        if (
+            waitingForAccomplishment
+        ) {
+            return;
+        }
+
+
         if (isRunning) {
 
             pauseTimer();
@@ -214,26 +314,29 @@ function startTimer() {
 
 
     timerInterval =
-        setInterval(function () {
+        setInterval(
+            function () {
 
-            timeLeft--;
+                timeLeft--;
 
 
-            if (timeLeft <= 0) {
+                if (timeLeft <= 0) {
 
-                timeLeft = 0;
+                    timeLeft = 0;
+
+                    updateDisplay();
+
+                    finishTimer();
+
+                    return;
+                }
+
 
                 updateDisplay();
 
-                finishTimer();
-
-                return;
-            }
-
-
-            updateDisplay();
-
-        }, 1000);
+            },
+            1000
+        );
 }
 
 
@@ -243,7 +346,9 @@ function startTimer() {
 
 function pauseTimer() {
 
-    clearInterval(timerInterval);
+    clearInterval(
+        timerInterval
+    );
 
 
     timerInterval = null;
@@ -255,7 +360,10 @@ function pauseTimer() {
         "Start";
 
 
-    if (isFocusMode) {
+    if (
+        isFocusMode &&
+        !waitingForAccomplishment
+    ) {
 
         increaseTimeButton.disabled =
             false;
@@ -273,6 +381,13 @@ function pauseTimer() {
 resetButton.addEventListener(
     "click",
     function () {
+
+        if (
+            waitingForAccomplishment
+        ) {
+            return;
+        }
+
 
         pauseTimer();
 
@@ -303,24 +418,12 @@ function finishTimer() {
     pauseTimer();
 
 
-    // -------------------------------------
     // Focus finished
-    // -------------------------------------
 
     if (isFocusMode) {
 
-        completePomodoro();
-
-
-        isFocusMode = false;
-
-
-        timeLeft =
-            breakMinutes * 60;
-
-
-        modeDisplay.textContent =
-            "Break Time";
+        waitingForAccomplishment =
+            true;
 
 
         increaseTimeButton.disabled =
@@ -329,41 +432,38 @@ function finishTimer() {
         decreaseTimeButton.disabled =
             true;
 
+        startButton.disabled =
+            true;
 
-        alert(
-            "Pomodoro complete! 🍅 Time for a break!"
-        );
+        resetButton.disabled =
+            true;
+
+
+        openAccomplishmentModal();
+
+        return;
     }
 
 
-    // -------------------------------------
     // Break finished
-    // -------------------------------------
 
-    else {
-
-        isFocusMode = true;
+    isFocusMode =
+        true;
 
 
-        timeLeft =
-            focusMinutes * 60;
+    timeLeft =
+        focusMinutes * 60;
 
 
-        modeDisplay.textContent =
-            "Focus Time";
+    modeDisplay.textContent =
+        "Focus Time";
 
 
-        increaseTimeButton.disabled =
-            false;
+    increaseTimeButton.disabled =
+        false;
 
-        decreaseTimeButton.disabled =
-            false;
-
-
-        alert(
-            "Break finished! Ready to focus?"
-        );
-    }
+    decreaseTimeButton.disabled =
+        false;
 
 
     updateDisplay();
@@ -371,16 +471,82 @@ function finishTimer() {
 
 
 // =========================================
-// COMPLETE POMODORO
+// OPEN MODAL
 // =========================================
 
-function completePomodoro() {
+function openAccomplishmentModal() {
+
+    accomplishmentInput.value =
+        "";
+
+
+    accomplishmentModal
+        .classList
+        .remove("hidden");
+
+
+    document.body
+        .classList
+        .add("modal-open");
+
+
+    accomplishmentInput.focus();
+}
+
+
+// =========================================
+// SAVE BUTTON
+// =========================================
+
+saveAccomplishmentButton
+    .addEventListener(
+        "click",
+        saveAccomplishment
+    );
+
+
+// Ctrl + Enter submits
+
+accomplishmentInput
+    .addEventListener(
+        "keydown",
+        function (event) {
+
+            if (
+                event.key === "Enter" &&
+                event.ctrlKey
+            ) {
+
+                saveAccomplishment();
+            }
+        }
+    );
+
+
+// =========================================
+// SAVE ACCOMPLISHMENT
+// =========================================
+
+function saveAccomplishment() {
+
+    const accomplishment =
+        accomplishmentInput
+            .value
+            .trim();
+
+
+    if (!accomplishment) {
+
+        accomplishmentInput.focus();
+
+        return;
+    }
+
 
     const session = {
 
-        task:
-            taskInput.value.trim() ||
-            "Untitled session",
+        accomplishment:
+            accomplishment,
 
         completedAt:
             new Date().toISOString(),
@@ -390,72 +556,489 @@ function completePomodoro() {
     };
 
 
-    sessions.push(session);
+    sessions.push(
+        session
+    );
 
 
     saveSessions();
 
 
-    pomodorosCompleted =
-        sessions.length;
+    closeAccomplishmentModal();
 
 
-    completedCount.textContent =
-        pomodorosCompleted;
+    /*
+    Tomato visually falls before
+    appearing permanently.
+    */
+
+    animateTomatoFall();
 
 
-    updateTomatoTracker();
+    displaySessionHistory(
+        false
+    );
 
-    displaySessionHistory();
+
+    waitingForAccomplishment =
+        false;
 
 
-    taskInput.value = "";
+    startButton.disabled =
+        false;
+
+    resetButton.disabled =
+        false;
+
+
+    // Switch to break
+
+    isFocusMode =
+        false;
+
+
+    timeLeft =
+        breakMinutes * 60;
+
+
+    modeDisplay.textContent =
+        "Break Time";
+
+
+    increaseTimeButton.disabled =
+        true;
+
+    decreaseTimeButton.disabled =
+        true;
+
+
+    updateDisplay();
 }
 
 
 // =========================================
-// SAVE SESSION HISTORY
+// CLOSE MODAL
 // =========================================
 
-function saveSessions() {
+function closeAccomplishmentModal() {
 
-    localStorage.setItem(
-        "pomodoroSessions",
-        JSON.stringify(sessions)
+    accomplishmentModal
+        .classList
+        .add("hidden");
+
+
+    document.body
+        .classList
+        .remove("modal-open");
+}
+
+
+// =========================================
+// FALLING TOMATO
+// =========================================
+
+function animateTomatoFall() {
+
+    const fallingTomato =
+        document.createElement(
+            "div"
+        );
+
+
+    fallingTomato.classList.add(
+        "falling-tomato"
+    );
+
+
+    fallingTomatoArea.appendChild(
+        fallingTomato
+    );
+
+
+    fallingTomato.addEventListener(
+        "animationend",
+        function () {
+
+            fallingTomato.remove();
+
+
+            renderBasket(true);
+
+
+            basketImpact();
+        }
     );
 }
 
 
 // =========================================
-// TOMATO TRACKER
+// BASKET IMPACT
 // =========================================
 
-function updateTomatoTracker() {
+function basketImpact() {
 
-    if (pomodorosCompleted === 0) {
+    basket.classList.remove(
+        "basket-impact"
+    );
 
-        tomatoTracker.textContent =
-            "No pomodoros yet ♡";
+
+    void basket.offsetWidth;
+
+
+    basket.classList.add(
+        "basket-impact"
+    );
+
+
+    const tomatoes =
+        basketTomatoes.querySelectorAll(
+            ".basket-tomato"
+        );
+
+
+    tomatoes.forEach(
+        function (
+            tomato,
+            index
+        ) {
+
+            /*
+            Slightly stagger the reaction.
+            */
+
+            const delay =
+                index * 35;
+
+
+            setTimeout(
+                function () {
+
+                    /*
+                    Don't overwrite the
+                    new tomato's landing
+                    animation.
+                    */
+
+                    if (
+                        tomato.classList.contains(
+                            "new-tomato"
+                        )
+                    ) {
+                        return;
+                    }
+
+
+                    tomato.classList.add(
+                        "tomato-jiggle"
+                    );
+
+
+                    setTimeout(
+                        function () {
+
+                            tomato.classList.remove(
+                                "tomato-jiggle"
+                            );
+
+                        },
+                        600
+                    );
+
+                },
+                delay
+            );
+        }
+    );
+
+
+    setTimeout(
+        function () {
+
+            basket.classList.remove(
+                "basket-impact"
+            );
+
+        },
+        600
+    );
+}
+
+
+// =========================================
+// RENDER BASKET
+// =========================================
+
+function renderBasket(
+    animateNewest = false
+) {
+
+    basketTomatoes.innerHTML =
+        "";
+
+
+    const todaysSessions =
+        getTodaysSessions();
+
+
+    completedCount.textContent =
+        todaysSessions.length;
+
+
+    const rotations = [
+        "-8deg",
+        "5deg",
+        "-3deg",
+        "9deg",
+        "-6deg",
+        "3deg",
+        "-4deg",
+        "7deg"
+    ];
+
+
+    todaysSessions.forEach(
+        function (
+            session,
+            index
+        ) {
+
+            const tomato =
+                document.createElement(
+                    "div"
+                );
+
+
+            tomato.classList.add(
+                "basket-tomato"
+            );
+
+
+            const rotation =
+                rotations[
+                    index %
+                    rotations.length
+                ];
+
+
+            tomato.style.setProperty(
+                "--rotation",
+                rotation
+            );
+
+
+            const isNewest =
+                index ===
+                todaysSessions.length - 1;
+
+
+            if (
+                animateNewest &&
+                isNewest
+            ) {
+
+                tomato.classList.add(
+                    "new-tomato"
+                );
+
+
+                tomato.addEventListener(
+                    "animationend",
+                    function () {
+
+                        tomato.classList.remove(
+                            "new-tomato"
+                        );
+
+                    },
+                    {
+                        once: true
+                    }
+                );
+            }
+
+
+            basketTomatoes.appendChild(
+                tomato
+            );
+        }
+    );
+
+
+    /*
+    Restart the random idle system
+    whenever the basket is rebuilt.
+    */
+
+    scheduleIdleMovement();
+}
+
+
+// =========================================
+// RANDOM IDLE MOVEMENT
+// =========================================
+
+function scheduleIdleMovement() {
+
+    /*
+    Prevent multiple timers from
+    accidentally running.
+    */
+
+    clearTimeout(
+        idleMovementTimeout
+    );
+
+
+    const tomatoes =
+        basketTomatoes.querySelectorAll(
+            ".basket-tomato"
+        );
+
+
+    if (
+        tomatoes.length === 0
+    ) {
+        return;
+    }
+
+
+    /*
+    Wait somewhere between
+    3 and 7 seconds.
+    */
+
+    const delay =
+        3000 +
+        Math.random() * 4000;
+
+
+    idleMovementTimeout =
+        setTimeout(
+            function () {
+
+                wiggleRandomTomato();
+
+
+                /*
+                Schedule the next random
+                movement.
+                */
+
+                scheduleIdleMovement();
+
+            },
+            delay
+        );
+}
+
+
+// =========================================
+// WIGGLE ONE RANDOM TOMATO
+// =========================================
+
+function wiggleRandomTomato() {
+
+    const tomatoes =
+        basketTomatoes.querySelectorAll(
+            ".basket-tomato"
+        );
+
+
+    if (
+        tomatoes.length === 0
+    ) {
+        return;
+    }
+
+
+    const randomIndex =
+        Math.floor(
+            Math.random() *
+            tomatoes.length
+        );
+
+
+    const tomato =
+        tomatoes[
+            randomIndex
+        ];
+
+
+    /*
+    Don't interrupt another animation.
+    */
+
+    if (
+        tomato.classList.contains(
+            "new-tomato"
+        ) ||
+        tomato.classList.contains(
+            "tomato-jiggle"
+        )
+    ) {
 
         return;
     }
 
 
-    tomatoTracker.textContent =
-        "🍅".repeat(pomodorosCompleted);
+    tomato.classList.add(
+        "idle-wiggle"
+    );
+
+
+    tomato.addEventListener(
+        "animationend",
+        function () {
+
+            tomato.classList.remove(
+                "idle-wiggle"
+            );
+
+        },
+        {
+            once: true
+        }
+    );
 }
 
 
 // =========================================
-// DISPLAY SESSION HISTORY
+// SAVE SESSIONS
 // =========================================
 
-function displaySessionHistory() {
+function saveSessions() {
 
-    sessionHistory.innerHTML = "";
+    localStorage.setItem(
+
+        "pomodoroSessions",
+
+        JSON.stringify(
+            sessions
+        )
+
+    );
+}
 
 
-    if (sessions.length === 0) {
+// =========================================
+// SESSION HISTORY
+// =========================================
+
+function displaySessionHistory(
+    updateBasket = true
+) {
+
+    sessionHistory.innerHTML =
+        "";
+
+
+    const todaysSessions =
+        getTodaysSessions();
+
+
+    if (
+        todaysSessions.length === 0
+    ) {
 
         sessionHistory.textContent =
             "No sessions yet ♡";
@@ -465,21 +1048,28 @@ function displaySessionHistory() {
             "Total focus time: 0 minutes";
 
 
+        if (updateBasket) {
+
+            renderBasket();
+        }
+
+
         return;
     }
 
 
     const reversedSessions =
-        [...sessions].reverse();
+        [...todaysSessions]
+            .reverse();
 
 
     reversedSessions.forEach(
         function (session) {
 
-            // Session container
-
             const sessionElement =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
 
 
             sessionElement.classList.add(
@@ -487,22 +1077,33 @@ function displaySessionHistory() {
             );
 
 
-            // Task name
+            // Accomplishment
 
-            const taskElement =
-                document.createElement("div");
-
-
-            taskElement.classList.add(
-                "session-task"
-            );
+            const accomplishmentElement =
+                document.createElement(
+                    "div"
+                );
 
 
-            taskElement.textContent =
-                "🍅 " + session.task;
+            accomplishmentElement
+                .classList
+                .add(
+                    "session-task"
+                );
 
 
-            // Date
+            const description =
+                session.accomplishment ||
+                session.task ||
+                "Completed focus session";
+
+
+            accomplishmentElement.textContent =
+                "🍅 " +
+                description;
+
+
+            // Time
 
             const completedDate =
                 new Date(
@@ -510,10 +1111,10 @@ function displaySessionHistory() {
                 );
 
 
-            // Time + duration
-
             const detailsElement =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
 
 
             detailsElement.classList.add(
@@ -528,11 +1129,11 @@ function displaySessionHistory() {
                         hour: "numeric",
                         minute: "2-digit"
                     }
-                )} • ${session.duration} minutes`;
+                )} • ${session.duration} min`;
 
 
             sessionElement.appendChild(
-                taskElement
+                accomplishmentElement
             );
 
 
@@ -549,6 +1150,12 @@ function displaySessionHistory() {
 
 
     updateTotalFocusTime();
+
+
+    if (updateBasket) {
+
+        renderBasket();
+    }
 }
 
 
@@ -558,10 +1165,14 @@ function displaySessionHistory() {
 
 function updateTotalFocusTime() {
 
+    const todaysSessions =
+        getTodaysSessions();
+
+
     let totalMinutes = 0;
 
 
-    sessions.forEach(
+    todaysSessions.forEach(
         function (session) {
 
             totalMinutes +=
@@ -599,13 +1210,5 @@ function updateTotalFocusTime() {
 // =========================================
 
 updateDisplay();
-
-
-completedCount.textContent =
-    pomodorosCompleted;
-
-
-updateTomatoTracker();
-
 
 displaySessionHistory();
