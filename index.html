@@ -14,15 +14,47 @@
 
     <main class="timer-container">
 
-        <h1>Pomodoro</h1>
+        <h1>🍅 Pomodoro</h1>
 
+        <!-- Focus / Break indicator -->
+        <h2 id="modeDisplay">Focus Time</h2>
+
+        <!-- Timer -->
         <div id="timer">
             25:00
         </div>
 
+        <!-- Controls -->
         <div class="controls">
             <button id="startButton">Start</button>
             <button id="resetButton">Reset</button>
+        </div>
+
+        <!-- Current task -->
+        <div class="task-section">
+            <label for="taskInput">What are you working on?</label>
+
+            <input
+                type="text"
+                id="taskInput"
+                placeholder="e.g. LeetCode matrix practice"
+            >
+        </div>
+
+        <!-- Completed Pomodoros -->
+        <div class="progress-section">
+
+            <h3>Today's Pomodoros</h3>
+
+            <div id="tomatoTracker">
+                No pomodoros completed yet!
+            </div>
+
+            <p>
+                Completed:
+                <span id="completedCount">0</span>
+            </p>
+
         </div>
 
     </main>
