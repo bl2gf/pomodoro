@@ -63,6 +63,14 @@ const basket =
     );
 
 
+// Big tomato image
+
+const bigPomoImage =
+    document.getElementById(
+        "bigPomoImage"
+    );
+
+
 // Modal
 
 const accomplishmentModal =
@@ -79,6 +87,17 @@ const saveAccomplishmentButton =
     document.getElementById(
         "saveAccomplishmentButton"
     );
+
+
+// =========================================
+// IMAGE PATHS
+// =========================================
+
+const stillTomatoImage =
+    "assets/bigPomo.png";
+
+const blinkingTomatoImage =
+    "assets/bigPomoAPNG.png";
 
 
 // =========================================
@@ -130,6 +149,36 @@ let sessions =
 // =========================================
 
 let idleMovementTimeout = null;
+
+
+// =========================================
+// TOMATO IMAGE STATE
+// =========================================
+
+function showStillTomato() {
+
+    bigPomoImage.src =
+        stillTomatoImage;
+}
+
+
+function showBlinkingTomato() {
+
+    /*
+        Adding a timestamp forces the
+        browser to reload the GIF.
+
+        This means every time you press
+        Start, the GIF begins again
+        instead of potentially resuming
+        from a cached animation state.
+    */
+
+    bigPomoImage.src =
+        blinkingTomatoImage +
+        "?restart=" +
+        Date.now();
+}
 
 
 // =========================================
@@ -316,6 +365,23 @@ function startTimer() {
         "Pause";
 
 
+    /*
+        Only blink while actively
+        focusing.
+
+        Break mode stays still.
+    */
+
+    if (isFocusMode) {
+
+        showBlinkingTomato();
+
+    } else {
+
+        showStillTomato();
+    }
+
+
     increaseTimeButton.disabled =
         true;
 
@@ -372,6 +438,14 @@ function pauseTimer() {
         "Start";
 
 
+    /*
+        Stop blinking whenever
+        the timer is paused.
+    */
+
+    showStillTomato();
+
+
     if (
         isFocusMode &&
         !waitingForAccomplishment
@@ -416,6 +490,9 @@ resetButton.addEventListener(
         }
 
 
+        showStillTomato();
+
+
         updateDisplay();
     }
 );
@@ -430,7 +507,9 @@ function finishTimer() {
     pauseTimer();
 
 
-    // Focus finished
+    /*
+        Focus finished
+    */
 
     if (isFocusMode) {
 
@@ -451,13 +530,18 @@ function finishTimer() {
             true;
 
 
+        showStillTomato();
+
+
         openAccomplishmentModal();
 
         return;
     }
 
 
-    // Break finished
+    /*
+        Break finished
+    */
 
     isFocusMode =
         true;
@@ -476,6 +560,9 @@ function finishTimer() {
 
     decreaseTimeButton.disabled =
         false;
+
+
+    showStillTomato();
 
 
     updateDisplay();
@@ -584,8 +671,8 @@ function saveAccomplishment() {
 
 
     /*
-    The tomato visually falls before
-    appearing permanently in the basket.
+        Tomato visually falls before
+        appearing permanently.
     */
 
     animateTomatoFall();
@@ -607,7 +694,9 @@ function saveAccomplishment() {
         false;
 
 
-    // Switch to break
+    /*
+        Switch to break mode.
+    */
 
     isFocusMode =
         false;
@@ -626,6 +715,13 @@ function saveAccomplishment() {
 
     decreaseTimeButton.disabled =
         true;
+
+
+    /*
+        Tomato stays still during break.
+    */
+
+    showStillTomato();
 
 
     updateDisplay();
@@ -682,18 +778,10 @@ function animateTomatoFall() {
             fallingTomato.remove();
 
 
-            /*
-            Add the permanent tomato.
-            */
-
             renderBasket(
                 true
             );
 
-
-            /*
-            React to the landing.
-            */
 
             basketImpact();
         }
@@ -712,12 +800,6 @@ function basketImpact() {
     );
 
 
-    /*
-    Forces the browser to recognize
-    that the animation was removed,
-    allowing us to restart it.
-    */
-
     void basket.offsetWidth;
 
 
@@ -725,13 +807,6 @@ function basketImpact() {
         "basket-impact"
     );
 
-
-    /*
-    Only jiggle OLD tomatoes.
-
-    The newest tomato has its own
-    landing animation.
-    */
 
     const tomatoes =
         basketTomatoes.querySelectorAll(
@@ -844,10 +919,6 @@ function renderBasket(
             );
 
 
-            // -------------------------
-            // BASE ROTATION
-            // -------------------------
-
             const rotation =
                 rotations[
                     index %
@@ -860,10 +931,6 @@ function renderBasket(
                 rotation
             );
 
-
-            // -------------------------
-            // NEWEST TOMATO
-            // -------------------------
 
             const isNewest =
                 index ===
@@ -903,11 +970,6 @@ function renderBasket(
     );
 
 
-    /*
-    Start/restart occasional
-    random tomato movement.
-    */
-
     scheduleIdleMovement();
 }
 
@@ -938,8 +1000,7 @@ function scheduleIdleMovement() {
 
 
     /*
-    Wait 3–7 seconds before
-    another tomato wiggles.
+        Wait 3–7 seconds.
     */
 
     const delay =
@@ -954,11 +1015,6 @@ function scheduleIdleMovement() {
 
                 wiggleRandomTomato();
 
-
-                /*
-                Schedule another
-                movement afterward.
-                */
 
                 scheduleIdleMovement();
 
@@ -1002,8 +1058,8 @@ function wiggleRandomTomato() {
 
 
     /*
-    Don't interrupt another
-    tomato animation.
+        Don't interrupt another
+        tomato animation.
     */
 
     if (
@@ -1115,9 +1171,7 @@ function displaySessionHistory(
             );
 
 
-            // -------------------------
-            // ACCOMPLISHMENT
-            // -------------------------
+            // Accomplishment
 
             const accomplishmentElement =
                 document.createElement(
@@ -1133,9 +1187,8 @@ function displaySessionHistory(
 
 
             /*
-            Backwards compatibility
-            for old sessions that used
-            "task" instead.
+                Supports both current
+                and older saved sessions.
             */
 
             const description =
@@ -1149,9 +1202,7 @@ function displaySessionHistory(
                 description;
 
 
-            // -------------------------
-            // COMPLETION TIME
-            // -------------------------
+            // Completion time
 
             const completedDate =
                 new Date(
@@ -1261,6 +1312,8 @@ function updateTotalFocusTime() {
 // =========================================
 // INITIALIZE
 // =========================================
+
+showStillTomato();
 
 updateDisplay();
 
