@@ -3,90 +3,60 @@
 // =========================================
 
 const timerDisplay =
-    document.getElementById(
-        "timer"
-    );
+    document.getElementById("timer");
 
 const modeDisplay =
-    document.getElementById(
-        "modeDisplay"
-    );
+    document.getElementById("modeDisplay");
 
 const startButton =
-    document.getElementById(
-        "startButton"
-    );
+    document.getElementById("startButton");
 
 const resetButton =
-    document.getElementById(
-        "resetButton"
-    );
+    document.getElementById("resetButton");
 
 const increaseTimeButton =
-    document.getElementById(
-        "increaseTimeButton"
-    );
+    document.getElementById("increaseTimeButton");
 
 const decreaseTimeButton =
-    document.getElementById(
-        "decreaseTimeButton"
-    );
+    document.getElementById("decreaseTimeButton");
 
 const completedCount =
-    document.getElementById(
-        "completedCount"
-    );
+    document.getElementById("completedCount");
 
 const sessionHistory =
-    document.getElementById(
-        "sessionHistory"
-    );
+    document.getElementById("sessionHistory");
 
 const totalFocusTime =
-    document.getElementById(
-        "totalFocusTime"
-    );
+    document.getElementById("totalFocusTime");
 
 const fallingTomatoArea =
-    document.getElementById(
-        "fallingTomatoArea"
-    );
+    document.getElementById("fallingTomatoArea");
 
 const basketTomatoes =
-    document.getElementById(
-        "basketTomatoes"
-    );
+    document.getElementById("basketTomatoes");
 
 const basket =
-    document.getElementById(
-        "basket"
-    );
-
-
-// Big tomato image
+    document.getElementById("basket");
 
 const bigPomoImage =
-    document.getElementById(
-        "bigPomoImage"
-    );
+    document.getElementById("bigPomoImage");
 
 
-// Modal
+// =========================================
+// MODAL ELEMENTS
+// =========================================
 
 const accomplishmentModal =
-    document.getElementById(
-        "accomplishmentModal"
-    );
+    document.getElementById("accomplishmentModal");
 
 const accomplishmentInput =
-    document.getElementById(
-        "accomplishmentInput"
-    );
+    document.getElementById("accomplishmentInput");
 
 const saveAccomplishmentButton =
-    document.getElementById(
-        "saveAccomplishmentButton"
-    );
+    document.getElementById("saveAccomplishmentButton");
+
+const closeAccomplishmentButton =
+    document.getElementById("closeAccomplishmentButton");
 
 
 // =========================================
@@ -101,16 +71,25 @@ const blinkingTomatoImage =
 
 
 // =========================================
+// TEST MODE
+// =========================================
+
+// Change this to true while testing.
+// Focus sessions will last 5 seconds.
+
+const TEST_MODE = true;
+
+const TEST_FOCUS_SECONDS = 5;
+
+
+// =========================================
 // TIMER SETTINGS
 // =========================================
 
 let focusMinutes =
     Number(
-        localStorage.getItem(
-            "focusMinutes"
-        )
+        localStorage.getItem("focusMinutes")
     ) || 25;
-
 
 const breakMinutes = 5;
 
@@ -120,7 +99,9 @@ const breakMinutes = 5;
 // =========================================
 
 let timeLeft =
-    focusMinutes * 60;
+    TEST_MODE
+        ? TEST_FOCUS_SECONDS
+        : focusMinutes * 60;
 
 let timerInterval = null;
 
@@ -128,8 +109,7 @@ let isRunning = false;
 
 let isFocusMode = true;
 
-let waitingForAccomplishment =
-    false;
+let waitingForAccomplishment = false;
 
 
 // =========================================
@@ -138,9 +118,7 @@ let waitingForAccomplishment =
 
 let sessions =
     JSON.parse(
-        localStorage.getItem(
-            "pomodoroSessions"
-        )
+        localStorage.getItem("pomodoroSessions")
     ) || [];
 
 
@@ -152,7 +130,7 @@ let idleMovementTimeout = null;
 
 
 // =========================================
-// TOMATO IMAGE STATE
+// BIG TOMATO IMAGE
 // =========================================
 
 function showStillTomato() {
@@ -165,13 +143,8 @@ function showStillTomato() {
 function showBlinkingTomato() {
 
     /*
-        Adding a timestamp forces the
-        browser to reload the GIF.
-
-        This means every time you press
-        Start, the GIF begins again
-        instead of potentially resuming
-        from a cached animation state.
+        Timestamp forces the GIF
+        to restart from the beginning.
     */
 
     bigPomoImage.src =
@@ -182,26 +155,34 @@ function showBlinkingTomato() {
 
 
 // =========================================
+// GET FOCUS TIME
+// =========================================
+
+function getFocusSeconds() {
+
+    if (TEST_MODE) {
+        return TEST_FOCUS_SECONDS;
+    }
+
+    return focusMinutes * 60;
+}
+
+
+// =========================================
 // GET TODAY'S SESSIONS
 // =========================================
 
 function getTodaysSessions() {
 
-    const today =
-        new Date();
-
+    const today = new Date();
 
     return sessions.filter(
         function (session) {
 
             const sessionDate =
-                new Date(
-                    session.completedAt
-                );
-
+                new Date(session.completedAt);
 
             return (
-
                 sessionDate.getFullYear() ===
                     today.getFullYear()
 
@@ -214,7 +195,6 @@ function getTodaysSessions() {
 
                 sessionDate.getDate() ===
                     today.getDate()
-
             );
         }
     );
@@ -228,21 +208,16 @@ function getTodaysSessions() {
 function updateDisplay() {
 
     const minutes =
-        Math.floor(
-            timeLeft / 60
-        );
-
+        Math.floor(timeLeft / 60);
 
     const seconds =
         timeLeft % 60;
-
 
     const formattedSeconds =
         String(seconds).padStart(
             2,
             "0"
         );
-
 
     timerDisplay.textContent =
         `${minutes}:${formattedSeconds}`;
@@ -265,13 +240,10 @@ increaseTimeButton.addEventListener(
             return;
         }
 
-
         focusMinutes++;
 
-
         timeLeft =
-            focusMinutes * 60;
-
+            getFocusSeconds();
 
         saveFocusTime();
 
@@ -297,13 +269,10 @@ decreaseTimeButton.addEventListener(
             return;
         }
 
-
         focusMinutes--;
 
-
         timeLeft =
-            focusMinutes * 60;
-
+            getFocusSeconds();
 
         saveFocusTime();
 
@@ -333,12 +302,9 @@ startButton.addEventListener(
     "click",
     function () {
 
-        if (
-            waitingForAccomplishment
-        ) {
+        if (waitingForAccomplishment) {
             return;
         }
-
 
         if (isRunning) {
 
@@ -360,16 +326,12 @@ function startTimer() {
 
     isRunning = true;
 
-
     startButton.textContent =
         "Pause";
 
-
     /*
-        Only blink while actively
-        focusing.
-
-        Break mode stays still.
+        Tomato blinks only during
+        an active focus session.
     */
 
     if (isFocusMode) {
@@ -381,13 +343,11 @@ function startTimer() {
         showStillTomato();
     }
 
-
     increaseTimeButton.disabled =
         true;
 
     decreaseTimeButton.disabled =
         true;
-
 
     timerInterval =
         setInterval(
@@ -395,10 +355,7 @@ function startTimer() {
 
                 timeLeft--;
 
-
-                if (
-                    timeLeft <= 0
-                ) {
+                if (timeLeft <= 0) {
 
                     timeLeft = 0;
 
@@ -408,7 +365,6 @@ function startTimer() {
 
                     return;
                 }
-
 
                 updateDisplay();
 
@@ -424,27 +380,16 @@ function startTimer() {
 
 function pauseTimer() {
 
-    clearInterval(
-        timerInterval
-    );
-
+    clearInterval(timerInterval);
 
     timerInterval = null;
 
     isRunning = false;
 
-
     startButton.textContent =
         "Start";
 
-
-    /*
-        Stop blinking whenever
-        the timer is paused.
-    */
-
     showStillTomato();
-
 
     if (
         isFocusMode &&
@@ -468,20 +413,16 @@ resetButton.addEventListener(
     "click",
     function () {
 
-        if (
-            waitingForAccomplishment
-        ) {
+        if (waitingForAccomplishment) {
             return;
         }
 
-
         pauseTimer();
-
 
         if (isFocusMode) {
 
             timeLeft =
-                focusMinutes * 60;
+                getFocusSeconds();
 
         } else {
 
@@ -489,9 +430,7 @@ resetButton.addEventListener(
                 breakMinutes * 60;
         }
 
-
         showStillTomato();
-
 
         updateDisplay();
     }
@@ -506,16 +445,14 @@ function finishTimer() {
 
     pauseTimer();
 
-
     /*
-        Focus finished
+        FOCUS FINISHED
     */
 
     if (isFocusMode) {
 
         waitingForAccomplishment =
             true;
-
 
         increaseTimeButton.disabled =
             true;
@@ -529,31 +466,24 @@ function finishTimer() {
         resetButton.disabled =
             true;
 
-
         showStillTomato();
-
 
         openAccomplishmentModal();
 
         return;
     }
 
-
     /*
-        Break finished
+        BREAK FINISHED
     */
 
-    isFocusMode =
-        true;
-
+    isFocusMode = true;
 
     timeLeft =
-        focusMinutes * 60;
-
+        getFocusSeconds();
 
     modeDisplay.textContent =
         "Focus Time";
-
 
     increaseTimeButton.disabled =
         false;
@@ -561,9 +491,7 @@ function finishTimer() {
     decreaseTimeButton.disabled =
         false;
 
-
     showStillTomato();
-
 
     updateDisplay();
 }
@@ -578,27 +506,36 @@ function openAccomplishmentModal() {
     accomplishmentInput.value =
         "";
 
-
     accomplishmentModal
         .classList
-        .remove(
-            "hidden"
-        );
-
+        .remove("hidden");
 
     document.body
         .classList
-        .add(
-            "modal-open"
-        );
-
+        .add("modal-open");
 
     accomplishmentInput.focus();
 }
 
 
 // =========================================
-// SAVE BUTTON
+// CLOSE MODAL
+// =========================================
+
+function closeAccomplishmentModal() {
+
+    accomplishmentModal
+        .classList
+        .add("hidden");
+
+    document.body
+        .classList
+        .remove("modal-open");
+}
+
+
+// =========================================
+// SAVE ACCOMPLISHMENT
 // =========================================
 
 saveAccomplishmentButton
@@ -608,12 +545,14 @@ saveAccomplishmentButton
     );
 
 
-// Ctrl + Enter submits
-
 accomplishmentInput
     .addEventListener(
         "keydown",
         function (event) {
+
+            /*
+                Ctrl + Enter also saves.
+            */
 
             if (
                 event.key === "Enter" &&
@@ -626,10 +565,6 @@ accomplishmentInput
     );
 
 
-// =========================================
-// SAVE ACCOMPLISHMENT
-// =========================================
-
 function saveAccomplishment() {
 
     const accomplishment =
@@ -637,14 +572,12 @@ function saveAccomplishment() {
             .value
             .trim();
 
-
     if (!accomplishment) {
 
         accomplishmentInput.focus();
 
         return;
     }
-
 
     const session = {
 
@@ -654,38 +587,67 @@ function saveAccomplishment() {
         completedAt:
             new Date().toISOString(),
 
+        /*
+            Store the user's selected
+            Pomodoro duration rather than
+            the 5-second test duration.
+        */
+
         duration:
             focusMinutes
     };
 
-
-    sessions.push(
-        session
-    );
-
+    sessions.push(session);
 
     saveSessions();
 
-
     closeAccomplishmentModal();
 
-
     /*
-        Tomato visually falls before
-        appearing permanently.
+        Tomato falls before appearing
+        permanently in the basket.
     */
 
     animateTomatoFall();
 
+    displaySessionHistory(false);
 
-    displaySessionHistory(
-        false
+    moveToBreak();
+}
+
+
+// =========================================
+// SKIP ACCOMPLISHMENT
+// =========================================
+
+closeAccomplishmentButton
+    .addEventListener(
+        "click",
+        skipAccomplishment
     );
 
 
+function skipAccomplishment() {
+
+    /*
+        Close the popup without saving
+        a session or adding a tomato.
+    */
+
+    closeAccomplishmentModal();
+
+    moveToBreak();
+}
+
+
+// =========================================
+// MOVE TO BREAK
+// =========================================
+
+function moveToBreak() {
+
     waitingForAccomplishment =
         false;
-
 
     startButton.disabled =
         false;
@@ -693,22 +655,14 @@ function saveAccomplishment() {
     resetButton.disabled =
         false;
 
-
-    /*
-        Switch to break mode.
-    */
-
     isFocusMode =
         false;
-
 
     timeLeft =
         breakMinutes * 60;
 
-
     modeDisplay.textContent =
         "Break Time";
-
 
     increaseTimeButton.disabled =
         true;
@@ -716,36 +670,9 @@ function saveAccomplishment() {
     decreaseTimeButton.disabled =
         true;
 
-
-    /*
-        Tomato stays still during break.
-    */
-
     showStillTomato();
 
-
     updateDisplay();
-}
-
-
-// =========================================
-// CLOSE MODAL
-// =========================================
-
-function closeAccomplishmentModal() {
-
-    accomplishmentModal
-        .classList
-        .add(
-            "hidden"
-        );
-
-
-    document.body
-        .classList
-        .remove(
-            "modal-open"
-        );
 }
 
 
@@ -756,20 +683,15 @@ function closeAccomplishmentModal() {
 function animateTomatoFall() {
 
     const fallingTomato =
-        document.createElement(
-            "div"
-        );
-
+        document.createElement("div");
 
     fallingTomato.classList.add(
         "falling-tomato"
     );
 
-
     fallingTomatoArea.appendChild(
         fallingTomato
     );
-
 
     fallingTomato.addEventListener(
         "animationend",
@@ -777,13 +699,18 @@ function animateTomatoFall() {
 
             fallingTomato.remove();
 
+            /*
+                Add the permanent tomato
+                after the falling animation.
+            */
 
-            renderBasket(
-                true
-            );
-
+            renderBasket(true);
 
             basketImpact();
+
+        },
+        {
+            once: true
         }
     );
 }
@@ -799,20 +726,21 @@ function basketImpact() {
         "basket-impact"
     );
 
+    /*
+        Forces browser to restart
+        the animation.
+    */
 
     void basket.offsetWidth;
-
 
     basket.classList.add(
         "basket-impact"
     );
 
-
     const tomatoes =
         basketTomatoes.querySelectorAll(
             ".basket-tomato:not(.new-tomato)"
         );
-
 
     tomatoes.forEach(
         function (
@@ -823,7 +751,6 @@ function basketImpact() {
             const delay =
                 index * 35;
 
-
             setTimeout(
                 function () {
 
@@ -831,11 +758,9 @@ function basketImpact() {
                         "idle-wiggle"
                     );
 
-
                     tomato.classList.add(
                         "tomato-jiggle"
                     );
-
 
                     setTimeout(
                         function () {
@@ -853,7 +778,6 @@ function basketImpact() {
             );
         }
     );
-
 
     setTimeout(
         function () {
@@ -879,14 +803,11 @@ function renderBasket(
     basketTomatoes.innerHTML =
         "";
 
-
     const todaysSessions =
         getTodaysSessions();
 
-
     completedCount.textContent =
         todaysSessions.length;
-
 
     const rotations = [
 
@@ -901,7 +822,6 @@ function renderBasket(
 
     ];
 
-
     todaysSessions.forEach(
         function (
             session,
@@ -913,11 +833,9 @@ function renderBasket(
                     "div"
                 );
 
-
             tomato.classList.add(
                 "basket-tomato"
             );
-
 
             const rotation =
                 rotations[
@@ -925,17 +843,14 @@ function renderBasket(
                     rotations.length
                 ];
 
-
             tomato.style.setProperty(
                 "--rotation",
                 rotation
             );
 
-
             const isNewest =
                 index ===
                 todaysSessions.length - 1;
-
 
             if (
                 animateNewest &&
@@ -945,7 +860,6 @@ function renderBasket(
                 tomato.classList.add(
                     "new-tomato"
                 );
-
 
                 tomato.addEventListener(
                     "animationend",
@@ -962,20 +876,18 @@ function renderBasket(
                 );
             }
 
-
             basketTomatoes.appendChild(
                 tomato
             );
         }
     );
 
-
     scheduleIdleMovement();
 }
 
 
 // =========================================
-// SCHEDULE RANDOM IDLE MOVEMENT
+// RANDOM IDLE MOVEMENT
 // =========================================
 
 function scheduleIdleMovement() {
@@ -984,37 +896,31 @@ function scheduleIdleMovement() {
         idleMovementTimeout
     );
 
-
     const tomatoes =
         basketTomatoes.querySelectorAll(
             ".basket-tomato"
         );
 
-
     if (
         tomatoes.length === 0
     ) {
-
         return;
     }
 
-
     /*
-        Wait 3–7 seconds.
+        One random tomato wiggles
+        every 3–7 seconds.
     */
 
     const delay =
         3000 +
-        Math.random() *
-        4000;
-
+        Math.random() * 4000;
 
     idleMovementTimeout =
         setTimeout(
             function () {
 
                 wiggleRandomTomato();
-
 
                 scheduleIdleMovement();
 
@@ -1024,10 +930,6 @@ function scheduleIdleMovement() {
 }
 
 
-// =========================================
-// WIGGLE RANDOM TOMATO
-// =========================================
-
 function wiggleRandomTomato() {
 
     const tomatoes =
@@ -1035,14 +937,11 @@ function wiggleRandomTomato() {
             ".basket-tomato"
         );
 
-
     if (
         tomatoes.length === 0
     ) {
-
         return;
     }
-
 
     const randomIndex =
         Math.floor(
@@ -1050,17 +949,8 @@ function wiggleRandomTomato() {
             tomatoes.length
         );
 
-
     const tomato =
-        tomatoes[
-            randomIndex
-        ];
-
-
-    /*
-        Don't interrupt another
-        tomato animation.
-    */
+        tomatoes[randomIndex];
 
     if (
         tomato.classList.contains(
@@ -1070,15 +960,12 @@ function wiggleRandomTomato() {
             "tomato-jiggle"
         )
     ) {
-
         return;
     }
-
 
     tomato.classList.add(
         "idle-wiggle"
     );
-
 
     tomato.addEventListener(
         "animationend",
@@ -1103,13 +990,8 @@ function wiggleRandomTomato() {
 function saveSessions() {
 
     localStorage.setItem(
-
         "pomodoroSessions",
-
-        JSON.stringify(
-            sessions
-        )
-
+        JSON.stringify(sessions)
     );
 }
 
@@ -1125,10 +1007,8 @@ function displaySessionHistory(
     sessionHistory.innerHTML =
         "";
 
-
     const todaysSessions =
         getTodaysSessions();
-
 
     if (
         todaysSessions.length === 0
@@ -1137,25 +1017,20 @@ function displaySessionHistory(
         sessionHistory.textContent =
             "No sessions yet ♡";
 
-
         totalFocusTime.textContent =
             "Total focus time: 0 minutes";
-
 
         if (updateBasket) {
 
             renderBasket();
         }
 
-
         return;
     }
-
 
     const reversedSessions =
         [...todaysSessions]
             .reverse();
-
 
     reversedSessions.forEach(
         function (session) {
@@ -1165,19 +1040,14 @@ function displaySessionHistory(
                     "div"
                 );
 
-
             sessionElement.classList.add(
                 "session"
             );
-
-
-            // Accomplishment
 
             const accomplishmentElement =
                 document.createElement(
                     "div"
                 );
-
 
             accomplishmentElement
                 .classList
@@ -1185,10 +1055,10 @@ function displaySessionHistory(
                     "session-task"
                 );
 
-
             /*
-                Supports both current
-                and older saved sessions.
+                Supports both the current
+                accomplishment format and
+                your older task format.
             */
 
             const description =
@@ -1196,53 +1066,40 @@ function displaySessionHistory(
                 session.task ||
                 "Completed focus session";
 
-
             accomplishmentElement.textContent =
                 "🍅 " +
                 description;
-
-
-            // Completion time
 
             const completedDate =
                 new Date(
                     session.completedAt
                 );
 
-
             const detailsElement =
                 document.createElement(
                     "div"
                 );
 
-
             detailsElement.classList.add(
                 "session-time"
             );
-
 
             detailsElement.textContent =
                 `${completedDate.toLocaleTimeString(
                     [],
                     {
-                        hour:
-                            "numeric",
-
-                        minute:
-                            "2-digit"
+                        hour: "numeric",
+                        minute: "2-digit"
                     }
                 )} • ${session.duration} min`;
-
 
             sessionElement.appendChild(
                 accomplishmentElement
             );
 
-
             sessionElement.appendChild(
                 detailsElement
             );
-
 
             sessionHistory.appendChild(
                 sessionElement
@@ -1250,9 +1107,7 @@ function displaySessionHistory(
         }
     );
 
-
     updateTotalFocusTime();
-
 
     if (updateBasket) {
 
@@ -1270,9 +1125,7 @@ function updateTotalFocusTime() {
     const todaysSessions =
         getTodaysSessions();
 
-
     let totalMinutes = 0;
-
 
     todaysSessions.forEach(
         function (session) {
@@ -1281,7 +1134,6 @@ function updateTotalFocusTime() {
                 session.duration;
         }
     );
-
 
     if (
         totalMinutes < 60
@@ -1293,16 +1145,13 @@ function updateTotalFocusTime() {
         return;
     }
 
-
     const hours =
         Math.floor(
             totalMinutes / 60
         );
 
-
     const minutes =
         totalMinutes % 60;
-
 
     totalFocusTime.textContent =
         `Total focus time: ${hours}h ${minutes}m`;

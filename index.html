@@ -49,13 +49,6 @@
 
         <section class="tomato">
 
-            <!--
-                Starts as the still PNG.
-
-                JavaScript switches this to
-                bigPomo.gif while focus is running.
-            -->
-
             <img
                 id="bigPomoImage"
                 src="assets/bigPomo.png"
@@ -135,24 +128,16 @@
 
                 <div id="basketTomatoes"></div>
 
-                <div class="basket-handle"></div>
 
-                <div class="basket-rim"></div>
+                <!--
+                    Your Procreate basket artwork.
+                -->
 
-
-                <div class="basket-body">
-
-                    <div class="basket-pattern"></div>
-
-                    <div class="basket-label">
-                        Today's<br>
-                        Harvest ♡
-                    </div>
-
-
-
-
-                </div>
+                <img
+                    src="assets/basket.png"
+                    alt="Basket of completed Pomodoros"
+                    class="basket-image"
+                >
 
             </div>
 
@@ -205,6 +190,13 @@
     >
 
         <div class="accomplishment-card">
+            <button
+                id="closeAccomplishmentButton"
+                class="modal-close-button"
+                aria-label="Skip accomplishment"
+            >
+                ×
+            </button>
 
             <div class="mini-tomato">
 
