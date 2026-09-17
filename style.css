@@ -15,6 +15,7 @@ body {
     background-color: #fff8f0;
 }
 
+
 .timer-container {
     width: 90%;
     max-width: 500px;
@@ -24,34 +25,110 @@ body {
     background-color: white;
 
     padding: 40px;
+    margin: 40px 0;
 
     border-radius: 20px;
 
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
 }
 
+
+/* -----------------------
+   Headings
+----------------------- */
+
 h1 {
     font-size: 40px;
-    margin-bottom: 10px;
+
+    margin-bottom: 25px;
 }
+
 
 #modeDisplay {
     font-size: 20px;
     font-weight: normal;
+
+    margin-bottom: 10px;
 }
+
+
+/* -----------------------
+   Timer
+----------------------- */
+
+.timer-editor {
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    margin: 20px 0 30px;
+}
+
 
 #timer {
     font-size: 80px;
     font-weight: bold;
 
-    margin: 30px 0;
+    line-height: 1;
+
+    margin: 8px 0;
+
+    font-variant-numeric: tabular-nums;
 }
+
+
+/* -----------------------
+   Time Adjustment Arrows
+----------------------- */
+
+.time-adjust-button {
+    border: none;
+
+    background: transparent;
+
+    padding: 4px 30px;
+
+    font-size: 18px;
+
+    color: #999999;
+
+    cursor: pointer;
+
+    transition:
+        color 0.15s ease,
+        transform 0.15s ease;
+}
+
+
+.time-adjust-button:hover {
+    color: #d94c4c;
+
+    transform: scale(1.15);
+}
+
+
+.time-adjust-button:disabled {
+    opacity: 0;
+
+    cursor: default;
+
+    pointer-events: none;
+}
+
+
+/* -----------------------
+   Timer Controls
+----------------------- */
 
 .controls {
     display: flex;
     justify-content: center;
+
     gap: 10px;
 }
+
 
 button {
     padding: 12px 25px;
@@ -64,30 +141,42 @@ button {
     cursor: pointer;
 }
 
+
 #startButton {
     background-color: #d94c4c;
+
     color: white;
 }
+
 
 #resetButton {
     background-color: #eeeeee;
 }
 
+
 button:hover {
     opacity: 0.8;
 }
+
+
+/* -----------------------
+   Task
+----------------------- */
 
 .task-section {
     margin-top: 40px;
 
     display: flex;
     flex-direction: column;
+
     gap: 10px;
 }
+
 
 .task-section label {
     font-weight: bold;
 }
+
 
 #taskInput {
     padding: 12px;
@@ -98,9 +187,15 @@ button:hover {
     font-size: 16px;
 }
 
+
+/* -----------------------
+   Tomato Tracker
+----------------------- */
+
 .progress-section {
     margin-top: 35px;
 }
+
 
 #tomatoTracker {
     font-size: 30px;
@@ -108,4 +203,65 @@ button:hover {
     min-height: 45px;
 
     margin: 15px 0;
+}
+
+
+/*
+Use this later when you add
+your hand-drawn tomato image.
+*/
+.tomato {
+    width: 50px;
+    height: 50px;
+
+    object-fit: contain;
+
+    margin: 4px;
+}
+
+
+/* -----------------------
+   Session History
+----------------------- */
+
+.history-section {
+    margin-top: 35px;
+
+    padding-top: 20px;
+
+    border-top: 1px solid #dddddd;
+}
+
+
+.session {
+    text-align: left;
+
+    padding: 15px;
+
+    margin: 10px 0;
+
+    background-color: #fff8f0;
+
+    border-radius: 10px;
+}
+
+
+.session-task {
+    font-weight: bold;
+}
+
+
+.session-time {
+    font-size: 14px;
+
+    margin-top: 5px;
+
+    color: #666666;
+}
+
+
+#totalFocusTime {
+    margin-top: 20px;
+
+    font-weight: bold;
 }

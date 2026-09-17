@@ -17,29 +17,66 @@
         <h1>🍅 Pomodoro</h1>
 
         <!-- Focus / Break indicator -->
-        <h2 id="modeDisplay">Focus Time</h2>
+        <h2 id="modeDisplay">
+            Focus Time
+        </h2>
 
-        <!-- Timer -->
-        <div id="timer">
-            25:00
+
+        <!-- Editable Timer -->
+        <div class="timer-editor">
+
+            <button
+                id="increaseTimeButton"
+                class="time-adjust-button"
+                aria-label="Increase focus time"
+            >
+                ▲
+            </button>
+
+            <div id="timer">
+                25:00
+            </div>
+
+            <button
+                id="decreaseTimeButton"
+                class="time-adjust-button"
+                aria-label="Decrease focus time"
+            >
+                ▼
+            </button>
+
         </div>
 
-        <!-- Controls -->
+
+        <!-- Timer Controls -->
         <div class="controls">
-            <button id="startButton">Start</button>
-            <button id="resetButton">Reset</button>
+
+            <button id="startButton">
+                Start
+            </button>
+
+            <button id="resetButton">
+                Reset
+            </button>
+
         </div>
 
-        <!-- Current task -->
+
+        <!-- Current Task -->
         <div class="task-section">
-            <label for="taskInput">What are you working on?</label>
+
+            <label for="taskInput">
+                What are you working on?
+            </label>
 
             <input
                 type="text"
                 id="taskInput"
                 placeholder="e.g. LeetCode matrix practice"
             >
+
         </div>
+
 
         <!-- Completed Pomodoros -->
         <div class="progress-section">
@@ -53,6 +90,22 @@
             <p>
                 Completed:
                 <span id="completedCount">0</span>
+            </p>
+
+        </div>
+
+
+        <!-- Session History -->
+        <div class="history-section">
+
+            <h3>Today's Sessions</h3>
+
+            <div id="sessionHistory">
+                No sessions yet!
+            </div>
+
+            <p id="totalFocusTime">
+                Total focus time: 0 minutes
             </p>
 
         </div>
