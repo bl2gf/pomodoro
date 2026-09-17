@@ -3,16 +3,24 @@
 // =========================================
 
 const timerDisplay =
-    document.getElementById("timer");
+    document.getElementById(
+        "timer"
+    );
 
 const modeDisplay =
-    document.getElementById("modeDisplay");
+    document.getElementById(
+        "modeDisplay"
+    );
 
 const startButton =
-    document.getElementById("startButton");
+    document.getElementById(
+        "startButton"
+    );
 
 const resetButton =
-    document.getElementById("resetButton");
+    document.getElementById(
+        "resetButton"
+    );
 
 const increaseTimeButton =
     document.getElementById(
@@ -118,7 +126,7 @@ let sessions =
 
 
 // =========================================
-// IDLE MOVEMENT STATE
+// IDLE MOVEMENT
 // =========================================
 
 let idleMovementTimeout = null;
@@ -144,6 +152,7 @@ function getTodaysSessions() {
 
 
             return (
+
                 sessionDate.getFullYear() ===
                     today.getFullYear()
 
@@ -156,6 +165,7 @@ function getTodaysSessions() {
 
                 sessionDate.getDate() ===
                     today.getDate()
+
             );
         }
     );
@@ -191,7 +201,7 @@ function updateDisplay() {
 
 
 // =========================================
-// INCREASE TIME
+// INCREASE FOCUS TIME
 // =========================================
 
 increaseTimeButton.addEventListener(
@@ -222,7 +232,7 @@ increaseTimeButton.addEventListener(
 
 
 // =========================================
-// DECREASE TIME
+// DECREASE FOCUS TIME
 // =========================================
 
 decreaseTimeButton.addEventListener(
@@ -267,7 +277,7 @@ function saveFocusTime() {
 
 
 // =========================================
-// START / PAUSE
+// START / PAUSE BUTTON
 // =========================================
 
 startButton.addEventListener(
@@ -320,7 +330,9 @@ function startTimer() {
                 timeLeft--;
 
 
-                if (timeLeft <= 0) {
+                if (
+                    timeLeft <= 0
+                ) {
 
                     timeLeft = 0;
 
@@ -471,7 +483,7 @@ function finishTimer() {
 
 
 // =========================================
-// OPEN MODAL
+// OPEN ACCOMPLISHMENT MODAL
 // =========================================
 
 function openAccomplishmentModal() {
@@ -482,12 +494,16 @@ function openAccomplishmentModal() {
 
     accomplishmentModal
         .classList
-        .remove("hidden");
+        .remove(
+            "hidden"
+        );
 
 
     document.body
         .classList
-        .add("modal-open");
+        .add(
+            "modal-open"
+        );
 
 
     accomplishmentInput.focus();
@@ -568,8 +584,8 @@ function saveAccomplishment() {
 
 
     /*
-    Tomato visually falls before
-    appearing permanently.
+    The tomato visually falls before
+    appearing permanently in the basket.
     */
 
     animateTomatoFall();
@@ -624,12 +640,16 @@ function closeAccomplishmentModal() {
 
     accomplishmentModal
         .classList
-        .add("hidden");
+        .add(
+            "hidden"
+        );
 
 
     document.body
         .classList
-        .remove("modal-open");
+        .remove(
+            "modal-open"
+        );
 }
 
 
@@ -662,8 +682,18 @@ function animateTomatoFall() {
             fallingTomato.remove();
 
 
-            renderBasket(true);
+            /*
+            Add the permanent tomato.
+            */
 
+            renderBasket(
+                true
+            );
+
+
+            /*
+            React to the landing.
+            */
 
             basketImpact();
         }
@@ -682,6 +712,12 @@ function basketImpact() {
     );
 
 
+    /*
+    Forces the browser to recognize
+    that the animation was removed,
+    allowing us to restart it.
+    */
+
     void basket.offsetWidth;
 
 
@@ -690,9 +726,16 @@ function basketImpact() {
     );
 
 
+    /*
+    Only jiggle OLD tomatoes.
+
+    The newest tomato has its own
+    landing animation.
+    */
+
     const tomatoes =
         basketTomatoes.querySelectorAll(
-            ".basket-tomato"
+            ".basket-tomato:not(.new-tomato)"
         );
 
 
@@ -702,10 +745,6 @@ function basketImpact() {
             index
         ) {
 
-            /*
-            Slightly stagger the reaction.
-            */
-
             const delay =
                 index * 35;
 
@@ -713,19 +752,9 @@ function basketImpact() {
             setTimeout(
                 function () {
 
-                    /*
-                    Don't overwrite the
-                    new tomato's landing
-                    animation.
-                    */
-
-                    if (
-                        tomato.classList.contains(
-                            "new-tomato"
-                        )
-                    ) {
-                        return;
-                    }
+                    tomato.classList.remove(
+                        "idle-wiggle"
+                    );
 
 
                     tomato.classList.add(
@@ -785,6 +814,7 @@ function renderBasket(
 
 
     const rotations = [
+
         "-8deg",
         "5deg",
         "-3deg",
@@ -793,6 +823,7 @@ function renderBasket(
         "3deg",
         "-4deg",
         "7deg"
+
     ];
 
 
@@ -813,6 +844,10 @@ function renderBasket(
             );
 
 
+            // -------------------------
+            // BASE ROTATION
+            // -------------------------
+
             const rotation =
                 rotations[
                     index %
@@ -825,6 +860,10 @@ function renderBasket(
                 rotation
             );
 
+
+            // -------------------------
+            // NEWEST TOMATO
+            // -------------------------
 
             const isNewest =
                 index ===
@@ -865,8 +904,8 @@ function renderBasket(
 
 
     /*
-    Restart the random idle system
-    whenever the basket is rebuilt.
+    Start/restart occasional
+    random tomato movement.
     */
 
     scheduleIdleMovement();
@@ -874,15 +913,10 @@ function renderBasket(
 
 
 // =========================================
-// RANDOM IDLE MOVEMENT
+// SCHEDULE RANDOM IDLE MOVEMENT
 // =========================================
 
 function scheduleIdleMovement() {
-
-    /*
-    Prevent multiple timers from
-    accidentally running.
-    */
 
     clearTimeout(
         idleMovementTimeout
@@ -898,18 +932,20 @@ function scheduleIdleMovement() {
     if (
         tomatoes.length === 0
     ) {
+
         return;
     }
 
 
     /*
-    Wait somewhere between
-    3 and 7 seconds.
+    Wait 3–7 seconds before
+    another tomato wiggles.
     */
 
     const delay =
         3000 +
-        Math.random() * 4000;
+        Math.random() *
+        4000;
 
 
     idleMovementTimeout =
@@ -920,8 +956,8 @@ function scheduleIdleMovement() {
 
 
                 /*
-                Schedule the next random
-                movement.
+                Schedule another
+                movement afterward.
                 */
 
                 scheduleIdleMovement();
@@ -933,7 +969,7 @@ function scheduleIdleMovement() {
 
 
 // =========================================
-// WIGGLE ONE RANDOM TOMATO
+// WIGGLE RANDOM TOMATO
 // =========================================
 
 function wiggleRandomTomato() {
@@ -947,6 +983,7 @@ function wiggleRandomTomato() {
     if (
         tomatoes.length === 0
     ) {
+
         return;
     }
 
@@ -965,7 +1002,8 @@ function wiggleRandomTomato() {
 
 
     /*
-    Don't interrupt another animation.
+    Don't interrupt another
+    tomato animation.
     */
 
     if (
@@ -1077,7 +1115,9 @@ function displaySessionHistory(
             );
 
 
-            // Accomplishment
+            // -------------------------
+            // ACCOMPLISHMENT
+            // -------------------------
 
             const accomplishmentElement =
                 document.createElement(
@@ -1092,6 +1132,12 @@ function displaySessionHistory(
                 );
 
 
+            /*
+            Backwards compatibility
+            for old sessions that used
+            "task" instead.
+            */
+
             const description =
                 session.accomplishment ||
                 session.task ||
@@ -1103,7 +1149,9 @@ function displaySessionHistory(
                 description;
 
 
-            // Time
+            // -------------------------
+            // COMPLETION TIME
+            // -------------------------
 
             const completedDate =
                 new Date(
@@ -1126,8 +1174,11 @@ function displaySessionHistory(
                 `${completedDate.toLocaleTimeString(
                     [],
                     {
-                        hour: "numeric",
-                        minute: "2-digit"
+                        hour:
+                            "numeric",
+
+                        minute:
+                            "2-digit"
                     }
                 )} • ${session.duration} min`;
 
@@ -1181,7 +1232,9 @@ function updateTotalFocusTime() {
     );
 
 
-    if (totalMinutes < 60) {
+    if (
+        totalMinutes < 60
+    ) {
 
         totalFocusTime.textContent =
             `Total focus time: ${totalMinutes} minutes`;

@@ -3,7 +3,11 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Pomodoro Tracker</title>
 
@@ -18,42 +22,38 @@
     <link rel="stylesheet" href="style.css">
 </head>
 
+
 <body>
 
     <main class="app">
 
-        <!-- HEADER -->
+        <!-- =====================================
+             HEADER
+        ====================================== -->
 
         <header class="page-header">
 
             <h1>Pomodoro ♡</h1>
 
             <p class="small-message">
-                small steps<br>
-                big things ♡
+                i am a<br>
+                big tomato ♡
             </p>
 
         </header>
 
 
-        <!-- BIG TOMATO TIMER -->
+        <!-- =====================================
+             BIG TOMATO TIMER
+        ====================================== -->
 
         <section class="tomato">
 
-            <div class="tomato-leaves">
-
-                <div class="leaf leaf-left"></div>
-                <div class="leaf leaf-middle-left"></div>
-
-                <div class="stem"></div>
-
-                <div class="leaf leaf-middle-right"></div>
-                <div class="leaf leaf-right"></div>
-
-            </div>
-
-
-            <div class="tomato-highlight"></div>
+            <img
+                src="assets/bigPomo.gif"
+                alt=""
+                class="big-tomato-image"
+            >
 
 
             <div class="tomato-content">
@@ -107,12 +107,16 @@
         </section>
 
 
-        <!-- FALLING TOMATO -->
+        <!-- =====================================
+             FALLING TOMATO
+        ====================================== -->
 
         <div id="fallingTomatoArea"></div>
 
 
-        <!-- BASKET -->
+        <!-- =====================================
+             BASKET
+        ====================================== -->
 
         <section class="basket-section">
 
@@ -127,14 +131,18 @@
 
                 <div class="basket-rim"></div>
 
+
                 <div class="basket-body">
 
                     <div class="basket-pattern"></div>
 
                     <div class="basket-label">
                         Today's<br>
-                        Pomodoros ♡
+                        Harvest ♡
                     </div>
+
+
+
 
                 </div>
 
@@ -149,15 +157,21 @@
         </section>
 
 
-        <!-- SESSION HISTORY -->
+        <!-- =====================================
+             SESSION HISTORY
+        ====================================== -->
 
         <section class="history-section">
 
-            <h3>Today's Sessions</h3>
+            <h3>
+                Today's Sessions
+            </h3>
+
 
             <div id="sessionHistory">
                 No sessions yet ♡
             </div>
+
 
             <p id="totalFocusTime">
                 Total focus time: 0 minutes
@@ -173,7 +187,9 @@
     </main>
 
 
-    <!-- ACCOMPLISHMENT MODAL -->
+    <!-- =====================================
+         ACCOMPLISHMENT MODAL
+    ====================================== -->
 
     <div
         id="accomplishmentModal"
