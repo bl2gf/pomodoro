@@ -7,63 +7,113 @@
 
     <title>Pomodoro Tracker</title>
 
+    <!-- Handwritten Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap"
+        rel="stylesheet"
+    >
+
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <main class="timer-container">
+    <main class="app">
 
-        <h1>🍅 Pomodoro</h1>
-
-        <!-- Focus / Break indicator -->
-        <h2 id="modeDisplay">
-            Focus Time
-        </h2>
+        <!-- Page title -->
+        <header class="page-header">
+            <h1>Pomodoro ♡</h1>
+        </header>
 
 
-        <!-- Editable Timer -->
-        <div class="timer-editor">
+        <!-- =====================================
+             BIG TOMATO TIMER
+        ====================================== -->
 
-            <button
-                id="increaseTimeButton"
-                class="time-adjust-button"
-                aria-label="Increase focus time"
-            >
-                ▲
-            </button>
+        <section class="tomato">
 
-            <div id="timer">
-                25:00
+            <!-- Tomato leaves -->
+            <div class="tomato-leaves">
+
+                <div class="leaf leaf-left"></div>
+
+                <div class="leaf leaf-middle-left"></div>
+
+                <div class="stem"></div>
+
+                <div class="leaf leaf-middle-right"></div>
+
+                <div class="leaf leaf-right"></div>
+
             </div>
 
-            <button
-                id="decreaseTimeButton"
-                class="time-adjust-button"
-                aria-label="Decrease focus time"
-            >
-                ▼
-            </button>
 
-        </div>
+            <!-- Tomato highlight -->
+            <div class="tomato-highlight"></div>
 
 
-        <!-- Timer Controls -->
-        <div class="controls">
+            <!-- Timer content -->
+            <div class="tomato-content">
 
-            <button id="startButton">
-                Start
-            </button>
-
-            <button id="resetButton">
-                Reset
-            </button>
-
-        </div>
+                <h2 id="modeDisplay">
+                    Focus Time
+                </h2>
 
 
-        <!-- Current Task -->
-        <div class="task-section">
+                <!-- Editable timer -->
+                <div class="timer-editor">
+
+                    <button
+                        id="increaseTimeButton"
+                        class="time-adjust-button"
+                        aria-label="Increase focus time"
+                    >
+                        ▲
+                    </button>
+
+
+                    <div id="timer">
+                        25:00
+                    </div>
+
+
+                    <button
+                        id="decreaseTimeButton"
+                        class="time-adjust-button"
+                        aria-label="Decrease focus time"
+                    >
+                        ▼
+                    </button>
+
+                </div>
+
+
+                <!-- Timer buttons -->
+                <div class="controls">
+
+                    <button id="startButton">
+                        Start
+                    </button>
+
+                    <button id="resetButton">
+                        Reset
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================
+             CURRENT TASK
+        ====================================== -->
+
+        <section class="task-section">
 
             <label for="taskInput">
                 What are you working on?
@@ -75,42 +125,69 @@
                 placeholder="e.g. LeetCode matrix practice"
             >
 
-        </div>
+        </section>
 
 
-        <!-- Completed Pomodoros -->
-        <div class="progress-section">
+        <!-- =====================================
+             DASHBOARD
+        ====================================== -->
 
-            <h3>Today's Pomodoros</h3>
+        <section class="dashboard">
 
-            <div id="tomatoTracker">
-                No pomodoros completed yet!
+
+            <!-- Today's Pomodoros -->
+            <div class="progress-section">
+
+                <h3>Today's Pomodoros</h3>
+
+                <div id="tomatoTracker">
+                    No pomodoros completed yet!
+                </div>
+
+                <p>
+                    Completed:
+                    <span id="completedCount">0</span>
+                </p>
+
             </div>
 
-            <p>
-                Completed:
-                <span id="completedCount">0</span>
-            </p>
 
-        </div>
+            <!-- Session History -->
+            <div class="history-section">
 
+                <h3>Today's Sessions</h3>
 
-        <!-- Session History -->
-        <div class="history-section">
+                <div id="sessionHistory">
+                    No sessions yet!
+                </div>
 
-            <h3>Today's Sessions</h3>
+                <p id="totalFocusTime">
+                    Total focus time: 0 minutes
+                </p>
 
-            <div id="sessionHistory">
-                No sessions yet!
             </div>
 
-            <p id="totalFocusTime">
-                Total focus time: 0 minutes
-            </p>
+        </section>
 
+
+        <!-- Little decorative messages -->
+
+        <div class="encouragement encouragement-left">
+            you<br>
+            can<br>
+            do<br>
+            this<br>
+            ♡
+        </div>
+
+        <div class="encouragement encouragement-right">
+            small steps<br>
+            big things<br>
+            ♡
         </div>
 
     </main>
+
 
     <script src="script.js"></script>
 

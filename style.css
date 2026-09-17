@@ -1,111 +1,310 @@
+/* =========================================
+   GENERAL
+========================================= */
+
 * {
     box-sizing: border-box;
 }
 
+
 body {
     margin: 0;
+
     min-height: 100vh;
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    background-color: #fff3df;
 
-    font-family: Arial, sans-serif;
+    color: #542c20;
 
-    background-color: #fff8f0;
+    font-family: "Patrick Hand", cursive;
 }
 
 
-.timer-container {
+.app {
     width: 90%;
-    max-width: 500px;
+    max-width: 950px;
 
-    text-align: center;
+    margin: 0 auto;
 
-    background-color: white;
+    padding: 40px 20px 80px;
 
-    padding: 40px;
-    margin: 40px 0;
-
-    border-radius: 20px;
-
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    position: relative;
 }
 
 
-/* -----------------------
-   Headings
------------------------ */
+/* =========================================
+   PAGE TITLE
+========================================= */
 
-h1 {
-    font-size: 40px;
-
-    margin-bottom: 25px;
-}
-
-
-#modeDisplay {
-    font-size: 20px;
-    font-weight: normal;
-
+.page-header {
     margin-bottom: 10px;
 }
 
 
-/* -----------------------
-   Timer
------------------------ */
+h1 {
+    margin: 0;
+
+    font-size: 52px;
+    font-weight: normal;
+
+    transform: rotate(-3deg);
+}
+
+
+h3 {
+    font-size: 28px;
+    font-weight: normal;
+
+    margin-top: 0;
+}
+
+
+/* =========================================
+   BIG TOMATO
+========================================= */
+
+.tomato {
+    width: 650px;
+    height: 500px;
+
+    max-width: 100%;
+
+    margin: 60px auto 35px;
+
+    position: relative;
+
+    background-color: #e94b3c;
+
+    border: 5px solid #542c20;
+
+    border-radius:
+        46% 46%
+        44% 44%
+        /
+        40% 40%
+        52% 52%;
+
+    box-shadow:
+        inset -18px -18px 0 rgba(130, 20, 15, 0.12),
+        inset 12px 12px 0 rgba(255, 255, 255, 0.06);
+
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+}
+
+
+/* Slightly irregular hand-drawn outline */
+
+.tomato::after {
+    content: "";
+
+    position: absolute;
+
+    inset: 5px;
+
+    border: 2px solid rgba(90, 30, 20, 0.35);
+
+    border-radius:
+        48% 45%
+        46% 43%
+        /
+        42% 39%
+        51% 49%;
+
+    pointer-events: none;
+}
+
+
+/* =========================================
+   TOMATO HIGHLIGHT
+========================================= */
+
+.tomato-highlight {
+    position: absolute;
+
+    width: 35px;
+    height: 95px;
+
+    left: 85px;
+    top: 105px;
+
+    border-left: 10px solid rgba(255, 240, 220, 0.65);
+
+    border-radius: 50%;
+
+    transform: rotate(25deg);
+}
+
+
+/* =========================================
+   TOMATO LEAVES
+========================================= */
+
+.tomato-leaves {
+    position: absolute;
+
+    top: -85px;
+    left: 50%;
+
+    width: 360px;
+    height: 160px;
+
+    transform: translateX(-50%);
+
+    z-index: 3;
+}
+
+
+.leaf,
+.stem {
+    position: absolute;
+
+    background-color: #657a3c;
+
+    border: 4px solid #3e4929;
+}
+
+
+.stem {
+    width: 45px;
+    height: 115px;
+
+    left: 158px;
+    top: -40px;
+
+    border-radius: 40%;
+
+    transform: rotate(8deg);
+}
+
+
+.leaf {
+    width: 130px;
+    height: 65px;
+
+    border-radius:
+        100% 0
+        100% 0;
+}
+
+
+.leaf-left {
+    left: 25px;
+    top: 55px;
+
+    transform: rotate(20deg);
+}
+
+
+.leaf-middle-left {
+    left: 85px;
+    top: 35px;
+
+    transform: rotate(50deg);
+}
+
+
+.leaf-middle-right {
+    right: 85px;
+    top: 35px;
+
+    transform: rotate(130deg);
+}
+
+
+.leaf-right {
+    right: 25px;
+    top: 55px;
+
+    transform: rotate(160deg);
+}
+
+
+/* =========================================
+   CONTENT INSIDE TOMATO
+========================================= */
+
+.tomato-content {
+    width: 100%;
+
+    text-align: center;
+
+    position: relative;
+
+    z-index: 2;
+
+    color: #fff3df;
+}
+
+
+#modeDisplay {
+    display: inline-block;
+
+    font-size: 32px;
+    font-weight: normal;
+
+    margin: 0 0 10px;
+
+    padding-bottom: 4px;
+
+    border-bottom: 2px solid #fff3df;
+}
+
+
+/* =========================================
+   TIMER
+========================================= */
 
 .timer-editor {
     display: flex;
     flex-direction: column;
 
     align-items: center;
-    justify-content: center;
 
-    margin: 20px 0 30px;
+    margin-bottom: 20px;
 }
 
 
 #timer {
-    font-size: 80px;
-    font-weight: bold;
+    font-size: 115px;
 
     line-height: 1;
 
-    margin: 8px 0;
+    margin: 6px 0;
 
     font-variant-numeric: tabular-nums;
+
+    color: #fff3df;
 }
 
 
-/* -----------------------
-   Time Adjustment Arrows
------------------------ */
+/* =========================================
+   TIMER ARROWS
+========================================= */
 
 .time-adjust-button {
     border: none;
 
     background: transparent;
 
-    padding: 4px 30px;
+    color: #fff3df;
 
-    font-size: 18px;
+    padding: 2px 35px;
 
-    color: #999999;
+    font-size: 22px;
 
     cursor: pointer;
 
     transition:
-        color 0.15s ease,
-        transform 0.15s ease;
+        transform 0.15s ease,
+        opacity 0.15s ease;
 }
 
 
 .time-adjust-button:hover {
-    color: #d94c4c;
-
-    transform: scale(1.15);
+    transform: scale(1.25);
 }
 
 
@@ -118,150 +317,293 @@ h1 {
 }
 
 
-/* -----------------------
-   Timer Controls
------------------------ */
+/* =========================================
+   START / RESET BUTTONS
+========================================= */
 
 .controls {
     display: flex;
+
     justify-content: center;
 
-    gap: 10px;
+    gap: 20px;
 }
 
 
-button {
-    padding: 12px 25px;
+.controls button {
+    min-width: 140px;
 
-    border: none;
-    border-radius: 10px;
+    padding: 10px 25px;
 
-    font-size: 16px;
+    background-color: #fff3df;
+
+    color: #542c20;
+
+    border: 3px solid #542c20;
+
+    border-radius: 25px;
+
+    font-family: "Patrick Hand", cursive;
+
+    font-size: 24px;
 
     cursor: pointer;
+
+    box-shadow: 2px 3px 0 rgba(80, 35, 25, 0.3);
+
+    transition:
+        transform 0.1s ease,
+        box-shadow 0.1s ease;
 }
 
 
-#startButton {
-    background-color: #d94c4c;
-
-    color: white;
+.controls button:hover {
+    transform: translateY(-2px);
 }
 
 
-#resetButton {
-    background-color: #eeeeee;
+.controls button:active {
+    transform: translateY(2px);
+
+    box-shadow: none;
 }
 
 
-button:hover {
-    opacity: 0.8;
-}
-
-
-/* -----------------------
-   Task
------------------------ */
+/* =========================================
+   TASK INPUT
+========================================= */
 
 .task-section {
-    margin-top: 40px;
+    width: 650px;
+    max-width: 100%;
+
+    margin: 0 auto 40px;
 
     display: flex;
     flex-direction: column;
 
-    gap: 10px;
+    gap: 8px;
 }
 
 
 .task-section label {
-    font-weight: bold;
+    font-size: 27px;
 }
 
 
 #taskInput {
-    padding: 12px;
+    width: 100%;
 
-    border: 1px solid #cccccc;
-    border-radius: 8px;
+    padding: 12px 18px;
+
+    background-color: transparent;
+
+    color: #542c20;
+
+    border: 3px solid #542c20;
+
+    border-radius: 12px;
+
+    outline: none;
+
+    font-family: "Patrick Hand", cursive;
+
+    font-size: 21px;
+}
+
+
+#taskInput::placeholder {
+    color: #9d8a78;
+}
+
+
+#taskInput:focus {
+    border-color: #d94c3d;
+}
+
+
+/* =========================================
+   LOWER DASHBOARD
+========================================= */
+
+.dashboard {
+    width: 650px;
+    max-width: 100%;
+
+    margin: 0 auto;
+
+    display: grid;
+
+    grid-template-columns: 1fr 1.3fr;
+
+    gap: 45px;
+}
+
+
+/* =========================================
+   TOMATO TRACKER
+========================================= */
+
+.progress-section {
+    padding-right: 25px;
+
+    border-right: 2px solid #d99b76;
+}
+
+
+#tomatoTracker {
+    min-height: 45px;
+
+    margin: 10px 0;
+
+    font-size: 32px;
+}
+
+
+.progress-section p {
+    font-size: 22px;
+}
+
+
+/* =========================================
+   SESSION HISTORY
+========================================= */
+
+.history-section {
+    min-width: 0;
+}
+
+
+.session {
+    padding: 10px 4px;
+
+    text-align: left;
+
+    border-bottom: 1px solid #d7b99c;
+}
+
+
+.session-task {
+    font-size: 21px;
+}
+
+
+.session-time {
+    margin-top: 2px;
+
+    color: #8b7060;
 
     font-size: 16px;
 }
 
 
-/* -----------------------
-   Tomato Tracker
------------------------ */
-
-.progress-section {
-    margin-top: 35px;
-}
-
-
-#tomatoTracker {
-    font-size: 30px;
-
-    min-height: 45px;
-
-    margin: 15px 0;
-}
-
-
-/*
-Use this later when you add
-your hand-drawn tomato image.
-*/
-.tomato {
-    width: 50px;
-    height: 50px;
-
-    object-fit: contain;
-
-    margin: 4px;
-}
-
-
-/* -----------------------
-   Session History
------------------------ */
-
-.history-section {
-    margin-top: 35px;
-
-    padding-top: 20px;
-
-    border-top: 1px solid #dddddd;
-}
-
-
-.session {
-    text-align: left;
-
-    padding: 15px;
-
-    margin: 10px 0;
-
-    background-color: #fff8f0;
-
-    border-radius: 10px;
-}
-
-
-.session-task {
-    font-weight: bold;
-}
-
-
-.session-time {
-    font-size: 14px;
-
-    margin-top: 5px;
-
-    color: #666666;
-}
-
-
 #totalFocusTime {
-    margin-top: 20px;
+    margin-top: 18px;
 
-    font-weight: bold;
+    font-size: 22px;
+}
+
+
+/* =========================================
+   LITTLE DECORATIONS
+========================================= */
+
+.encouragement {
+    position: absolute;
+
+    font-size: 22px;
+
+    line-height: 1.1;
+
+    color: #9b4933;
+}
+
+
+.encouragement-left {
+    left: -20px;
+    bottom: 120px;
+
+    transform: rotate(-7deg);
+}
+
+
+.encouragement-right {
+    right: -20px;
+    top: 100px;
+
+    transform: rotate(6deg);
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 750px) {
+
+    .app {
+        width: 95%;
+
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+
+    h1 {
+        font-size: 42px;
+    }
+
+
+    .tomato {
+        width: 95%;
+        height: 420px;
+
+        margin-top: 80px;
+    }
+
+
+    .tomato-leaves {
+        transform:
+            translateX(-50%)
+            scale(0.8);
+    }
+
+
+    #timer {
+        font-size: 80px;
+    }
+
+
+    #modeDisplay {
+        font-size: 27px;
+    }
+
+
+    .controls button {
+        min-width: 110px;
+
+        font-size: 21px;
+    }
+
+
+    .dashboard {
+        grid-template-columns: 1fr;
+
+        gap: 25px;
+    }
+
+
+    .progress-section {
+        border-right: none;
+
+        border-bottom: 2px solid #d99b76;
+
+        padding-right: 0;
+        padding-bottom: 20px;
+    }
+
+
+    .encouragement {
+        display: none;
+    }
 }

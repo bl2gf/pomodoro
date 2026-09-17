@@ -1,6 +1,6 @@
-// -----------------------------------
-// Get HTML elements
-// -----------------------------------
+// =========================================
+// HTML ELEMENTS
+// =========================================
 
 const timerDisplay =
     document.getElementById("timer");
@@ -36,23 +36,25 @@ const totalFocusTime =
     document.getElementById("totalFocusTime");
 
 
-// -----------------------------------
-// Timer Settings
-// -----------------------------------
+// =========================================
+// TIMER SETTINGS
+// =========================================
 
-// Load saved focus time.
-// If there isn't one, default to 25 minutes.
+// Load saved focus duration.
+// Default = 25 minutes.
+
 let focusMinutes =
     Number(localStorage.getItem("focusMinutes")) || 25;
 
 
-// We'll make break time editable later.
+// We'll make this editable later.
+
 const breakMinutes = 5;
 
 
-// -----------------------------------
-// Timer State
-// -----------------------------------
+// =========================================
+// TIMER STATE
+// =========================================
 
 let timeLeft =
     focusMinutes * 60;
@@ -64,9 +66,9 @@ let isRunning = false;
 let isFocusMode = true;
 
 
-// -----------------------------------
-// Load Session History
-// -----------------------------------
+// =========================================
+// SESSION HISTORY
+// =========================================
 
 let sessions =
     JSON.parse(
@@ -78,9 +80,9 @@ let pomodorosCompleted =
     sessions.length;
 
 
-// -----------------------------------
-// Update Timer Display
-// -----------------------------------
+// =========================================
+// TIMER DISPLAY
+// =========================================
 
 function updateDisplay() {
 
@@ -100,16 +102,14 @@ function updateDisplay() {
 }
 
 
-// -----------------------------------
-// Increase Focus Time
-// -----------------------------------
+// =========================================
+// INCREASE FOCUS TIME
+// =========================================
 
 increaseTimeButton.addEventListener(
     "click",
     function () {
 
-        // Don't allow editing while
-        // running or during a break.
         if (isRunning || !isFocusMode) {
             return;
         }
@@ -129,9 +129,9 @@ increaseTimeButton.addEventListener(
 );
 
 
-// -----------------------------------
-// Decrease Focus Time
-// -----------------------------------
+// =========================================
+// DECREASE FOCUS TIME
+// =========================================
 
 decreaseTimeButton.addEventListener(
     "click",
@@ -160,9 +160,9 @@ decreaseTimeButton.addEventListener(
 );
 
 
-// -----------------------------------
-// Save Focus Preference
-// -----------------------------------
+// =========================================
+// SAVE FOCUS TIME
+// =========================================
 
 function saveFocusTime() {
 
@@ -173,9 +173,9 @@ function saveFocusTime() {
 }
 
 
-// -----------------------------------
-// Start / Pause Button
-// -----------------------------------
+// =========================================
+// START / PAUSE
+// =========================================
 
 startButton.addEventListener(
     "click",
@@ -193,9 +193,9 @@ startButton.addEventListener(
 );
 
 
-// -----------------------------------
-// Start Timer
-// -----------------------------------
+// =========================================
+// START TIMER
+// =========================================
 
 function startTimer() {
 
@@ -206,11 +206,11 @@ function startTimer() {
         "Pause";
 
 
-    // Hide editing controls while
-    // the timer is running.
-    increaseTimeButton.disabled = true;
+    increaseTimeButton.disabled =
+        true;
 
-    decreaseTimeButton.disabled = true;
+    decreaseTimeButton.disabled =
+        true;
 
 
     timerInterval =
@@ -218,21 +218,28 @@ function startTimer() {
 
             timeLeft--;
 
-            updateDisplay();
-
 
             if (timeLeft <= 0) {
 
+                timeLeft = 0;
+
+                updateDisplay();
+
                 finishTimer();
+
+                return;
             }
+
+
+            updateDisplay();
 
         }, 1000);
 }
 
 
-// -----------------------------------
-// Pause Timer
-// -----------------------------------
+// =========================================
+// PAUSE TIMER
+// =========================================
 
 function pauseTimer() {
 
@@ -248,8 +255,6 @@ function pauseTimer() {
         "Start";
 
 
-    // Focus time can be edited
-    // when we're in focus mode.
     if (isFocusMode) {
 
         increaseTimeButton.disabled =
@@ -261,9 +266,9 @@ function pauseTimer() {
 }
 
 
-// -----------------------------------
-// Reset Timer
-// -----------------------------------
+// =========================================
+// RESET TIMER
+// =========================================
 
 resetButton.addEventListener(
     "click",
@@ -289,18 +294,18 @@ resetButton.addEventListener(
 );
 
 
-// -----------------------------------
-// Timer Finished
-// -----------------------------------
+// =========================================
+// TIMER FINISHED
+// =========================================
 
 function finishTimer() {
 
     pauseTimer();
 
 
-    // -------------------------------
-    // Focus session finished
-    // -------------------------------
+    // -------------------------------------
+    // Focus finished
+    // -------------------------------------
 
     if (isFocusMode) {
 
@@ -318,8 +323,6 @@ function finishTimer() {
             "Break Time";
 
 
-        // Don't allow focus time
-        // editing during the break.
         increaseTimeButton.disabled =
             true;
 
@@ -333,9 +336,9 @@ function finishTimer() {
     }
 
 
-    // -------------------------------
+    // -------------------------------------
     // Break finished
-    // -------------------------------
+    // -------------------------------------
 
     else {
 
@@ -367,9 +370,9 @@ function finishTimer() {
 }
 
 
-// -----------------------------------
-// Complete Pomodoro
-// -----------------------------------
+// =========================================
+// COMPLETE POMODORO
+// =========================================
 
 function completePomodoro() {
 
@@ -410,9 +413,9 @@ function completePomodoro() {
 }
 
 
-// -----------------------------------
-// Save Sessions
-// -----------------------------------
+// =========================================
+// SAVE SESSION HISTORY
+// =========================================
 
 function saveSessions() {
 
@@ -423,16 +426,16 @@ function saveSessions() {
 }
 
 
-// -----------------------------------
-// Update Tomato Tracker
-// -----------------------------------
+// =========================================
+// TOMATO TRACKER
+// =========================================
 
 function updateTomatoTracker() {
 
     if (pomodorosCompleted === 0) {
 
         tomatoTracker.textContent =
-            "No pomodoros completed yet!";
+            "No pomodoros yet ♡";
 
         return;
     }
@@ -443,20 +446,19 @@ function updateTomatoTracker() {
 }
 
 
-// -----------------------------------
-// Display Session History
-// -----------------------------------
+// =========================================
+// DISPLAY SESSION HISTORY
+// =========================================
 
 function displaySessionHistory() {
 
     sessionHistory.innerHTML = "";
 
 
-    // No saved sessions
     if (sessions.length === 0) {
 
         sessionHistory.textContent =
-            "No sessions yet!";
+            "No sessions yet ♡";
 
 
         totalFocusTime.textContent =
@@ -467,8 +469,6 @@ function displaySessionHistory() {
     }
 
 
-    // Copy the array and reverse it
-    // so newest sessions appear first.
     const reversedSessions =
         [...sessions].reverse();
 
@@ -476,9 +476,7 @@ function displaySessionHistory() {
     reversedSessions.forEach(
         function (session) {
 
-            // -----------------------
             // Session container
-            // -----------------------
 
             const sessionElement =
                 document.createElement("div");
@@ -489,9 +487,7 @@ function displaySessionHistory() {
             );
 
 
-            // -----------------------
-            // Task
-            // -----------------------
+            // Task name
 
             const taskElement =
                 document.createElement("div");
@@ -506,18 +502,7 @@ function displaySessionHistory() {
                 "🍅 " + session.task;
 
 
-            // -----------------------
-            // Completion time
-            // -----------------------
-
-            const timeElement =
-                document.createElement("div");
-
-
-            timeElement.classList.add(
-                "session-time"
-            );
-
+            // Date
 
             const completedDate =
                 new Date(
@@ -525,30 +510,26 @@ function displaySessionHistory() {
                 );
 
 
-            timeElement.textContent =
-                completedDate.toLocaleString();
+            // Time + duration
 
-
-            // -----------------------
-            // Duration
-            // -----------------------
-
-            const durationElement =
+            const detailsElement =
                 document.createElement("div");
 
 
-            durationElement.classList.add(
+            detailsElement.classList.add(
                 "session-time"
             );
 
 
-            durationElement.textContent =
-                `${session.duration} minute focus session`;
+            detailsElement.textContent =
+                `${completedDate.toLocaleTimeString(
+                    [],
+                    {
+                        hour: "numeric",
+                        minute: "2-digit"
+                    }
+                )} • ${session.duration} minutes`;
 
-
-            // -----------------------
-            // Add everything
-            // -----------------------
 
             sessionElement.appendChild(
                 taskElement
@@ -556,12 +537,7 @@ function displaySessionHistory() {
 
 
             sessionElement.appendChild(
-                timeElement
-            );
-
-
-            sessionElement.appendChild(
-                durationElement
+                detailsElement
             );
 
 
@@ -576,9 +552,9 @@ function displaySessionHistory() {
 }
 
 
-// -----------------------------------
-// Calculate Total Focus Time
-// -----------------------------------
+// =========================================
+// TOTAL FOCUS TIME
+// =========================================
 
 function updateTotalFocusTime() {
 
@@ -594,7 +570,6 @@ function updateTotalFocusTime() {
     );
 
 
-    // Less than an hour
     if (totalMinutes < 60) {
 
         totalFocusTime.textContent =
@@ -604,9 +579,10 @@ function updateTotalFocusTime() {
     }
 
 
-    // One hour or more
     const hours =
-        Math.floor(totalMinutes / 60);
+        Math.floor(
+            totalMinutes / 60
+        );
 
 
     const minutes =
@@ -618,9 +594,9 @@ function updateTotalFocusTime() {
 }
 
 
-// -----------------------------------
-// Initialize Page
-// -----------------------------------
+// =========================================
+// INITIALIZE
+// =========================================
 
 updateDisplay();
 
