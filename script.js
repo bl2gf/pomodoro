@@ -77,10 +77,10 @@ const animatedTomatoImage =
 // TEST MODE
 // =========================================
 
-// Set to true while testing.
+// Change this to true while testing.
 // Focus sessions will last 5 seconds.
 
-const TEST_MODE = true;
+const TEST_MODE = false;
 
 const TEST_FOCUS_SECONDS = 5;
 
@@ -147,10 +147,8 @@ function showStillTomato() {
 
 function showAnimatedTomato() {
 
-    /*
-        Reload the APNG so the animation
-        starts fresh when focus begins.
-    */
+    // Reload APNG so animation
+    // starts fresh each focus session.
 
     bigPomoImage.src =
         animatedTomatoImage +
@@ -231,6 +229,59 @@ function updateDisplay() {
 
     timerDisplay.textContent =
         `${minutes}:${formattedSeconds}`;
+
+    updateTabTitle();
+}
+
+
+// =========================================
+// CHROME TAB TITLE
+// =========================================
+
+function updateTabTitle() {
+
+    const minutes =
+        Math.floor(
+            timeLeft / 60
+        );
+
+    const seconds =
+        timeLeft % 60;
+
+    const formattedSeconds =
+        String(seconds).padStart(
+            2,
+            "0"
+        );
+
+    const time =
+        `${minutes}:${formattedSeconds}`;
+
+    const mode =
+        isFocusMode
+            ? "Focus"
+            : "Break";
+
+
+    if (waitingForAccomplishment) {
+
+        document.title =
+            "🍅 Focus complete! | Pomodoro";
+
+        return;
+    }
+
+
+    if (isRunning) {
+
+        document.title =
+            `🍅 ${time} • ${mode} | Pomodoro`;
+
+    } else {
+
+        document.title =
+            `⏸ ${time} • ${mode} | Pomodoro`;
+    }
 }
 
 
@@ -304,38 +355,7 @@ function saveFocusTime() {
         focusMinutes
     );
 }
-// =========================================
-// NOTIFICATIONS
-// =========================================
 
-function requestNotificationPermission() {
-
-    if (
-        "Notification" in window &&
-        Notification.permission === "default"
-    ) {
-
-        Notification.requestPermission();
-    }
-}
-
-
-function sendFocusCompleteNotification() {
-
-    if (
-        "Notification" in window &&
-        Notification.permission === "granted"
-    ) {
-
-        new Notification(
-            "Focus complete! 🍅",
-            {
-                body:
-                    "You did it! Time for a break ♡"
-            }
-        );
-    }
-}
 
 // =========================================
 // START / PAUSE BUTTON
@@ -370,12 +390,13 @@ startButton.addEventListener(
 
 function startTimer() {
 
-    requestNotificationPermission();
-
     isRunning = true;
+
+    updateTabTitle();
 
     startButton.textContent =
         "Pause";
+
 
     if (isFocusMode) {
 
@@ -386,17 +407,20 @@ function startTimer() {
         showStillTomato();
     }
 
+
     increaseTimeButton.disabled =
         true;
 
     decreaseTimeButton.disabled =
         true;
 
+
     timerInterval =
         setInterval(
             function () {
 
                 timeLeft--;
+
 
                 if (timeLeft <= 0) {
 
@@ -408,6 +432,7 @@ function startTimer() {
 
                     return;
                 }
+
 
                 updateDisplay();
 
@@ -435,6 +460,9 @@ function pauseTimer() {
         "Start";
 
     showStillTomato();
+
+    updateTabTitle();
+
 
     if (
         isFocusMode &&
@@ -466,7 +494,9 @@ resetButton.addEventListener(
             return;
         }
 
+
         pauseTimer();
+
 
         if (isFocusMode) {
 
@@ -478,6 +508,7 @@ resetButton.addEventListener(
             timeLeft =
                 breakMinutes * 60;
         }
+
 
         showStillTomato();
 
@@ -494,12 +525,12 @@ function finishTimer() {
 
     pauseTimer();
 
-    /*
-        FOCUS FINISHED
-    */
+
+    // -------------------------
+    // FOCUS FINISHED
+    // -------------------------
 
     if (isFocusMode) {
-        sendFocusCompleteNotification();
 
         waitingForAccomplishment =
             true;
@@ -518,14 +549,17 @@ function finishTimer() {
 
         showStillTomato();
 
+        updateTabTitle();
+
         openAccomplishmentModal();
 
         return;
     }
 
-    /*
-        BREAK FINISHED
-    */
+
+    // -------------------------
+    // BREAK FINISHED
+    // -------------------------
 
     isFocusMode =
         true;
@@ -619,12 +653,14 @@ function saveAccomplishment() {
             .value
             .trim();
 
+
     if (!accomplishment) {
 
         accomplishmentInput.focus();
 
         return;
     }
+
 
     const session = {
 
@@ -638,29 +674,29 @@ function saveAccomplishment() {
             focusMinutes
     };
 
+
     sessions.push(
         session
     );
+
 
     saveSessions();
 
     closeAccomplishmentModal();
 
-    /*
-        Update history immediately,
-        but DON'T update the basket yet.
-    */
+
+    // Update history now,
+    // but wait to update basket
+    // until tomato reaches it.
 
     displaySessionHistory(
         false
     );
 
+
     waitingForAccomplishment =
         false;
 
-    /*
-        Start our new animation sequence.
-    */
 
     animateBigTomatoToBasket();
 }
@@ -684,11 +720,6 @@ function skipAccomplishment() {
     waitingForAccomplishment =
         false;
 
-    /*
-        Since nothing was saved,
-        don't animate into the basket.
-    */
-
     moveToBreak();
 
     animateNewBigTomatoIn();
@@ -704,6 +735,7 @@ async function animateBigTomatoToBasket() {
     isTransitioning =
         true;
 
+
     startButton.disabled =
         true;
 
@@ -717,12 +749,9 @@ async function animateBigTomatoToBasket() {
         true;
 
 
-    /*
-        First fade out the timer,
-        label, arrows and buttons.
-
-        The tomato itself stays visible.
-    */
+    // -------------------------
+    // FADE TIMER CONTENT
+    // -------------------------
 
     const contentFade =
         tomatoContent.animate(
@@ -742,13 +771,13 @@ async function animateBigTomatoToBasket() {
             }
         );
 
+
     await contentFade.finished;
 
 
-    /*
-        Get the tomato and basket
-        positions on the screen.
-    */
+    // -------------------------
+    // GET POSITIONS
+    // -------------------------
 
     const tomatoRect =
         tomato.getBoundingClientRect();
@@ -756,10 +785,6 @@ async function animateBigTomatoToBasket() {
     const basketRect =
         basket.getBoundingClientRect();
 
-
-    /*
-        Find the center of each.
-    */
 
     const tomatoCenterX =
         tomatoRect.left +
@@ -769,24 +794,16 @@ async function animateBigTomatoToBasket() {
         tomatoRect.top +
         tomatoRect.height / 2;
 
+
     const basketCenterX =
         basketRect.left +
         basketRect.width / 2;
 
-    /*
-        Aim slightly inside the basket
-        rather than at its exact center.
-    */
 
     const basketTargetY =
         basketRect.top +
         basketRect.height * 0.35;
 
-
-    /*
-        Calculate how far the big
-        tomato needs to travel.
-    */
 
     const moveX =
         basketCenterX -
@@ -797,12 +814,9 @@ async function animateBigTomatoToBasket() {
         tomatoCenterY;
 
 
-    /*
-        Shrink + fall into basket.
-
-        The middle keyframe gives it
-        a slight curved / playful fall.
-    */
+    // -------------------------
+    // SHRINK INTO BASKET
+    // -------------------------
 
     const fallAnimation =
         tomato.animate(
@@ -832,6 +846,7 @@ async function animateBigTomatoToBasket() {
             ],
             {
                 duration: 950,
+
                 easing:
                     "cubic-bezier(.55, .05, .7, .4)",
 
@@ -843,13 +858,9 @@ async function animateBigTomatoToBasket() {
     await fallAnimation.finished;
 
 
-    /*
-        The big tomato has reached
-        the basket.
-
-        Now show its permanent
-        little basket version.
-    */
+    // -------------------------
+    // ADD TOMATO TO BASKET
+    // -------------------------
 
     renderBasket(
         true
@@ -858,10 +869,9 @@ async function animateBigTomatoToBasket() {
     basketImpact();
 
 
-    /*
-        Hide the original big tomato
-        while we reset its transform.
-    */
+    // -------------------------
+    // RESET BIG TOMATO
+    // -------------------------
 
     tomato.style.opacity =
         "0";
@@ -874,22 +884,23 @@ async function animateBigTomatoToBasket() {
         "none";
 
 
-    /*
-        Prepare the break timer.
-    */
+    // -------------------------
+    // PREPARE BREAK
+    // -------------------------
 
     moveToBreak();
 
 
-    /*
-        Bring in a brand new big tomato.
-    */
+    // -------------------------
+    // NEW TOMATO FALLS IN
+    // -------------------------
 
     await animateNewBigTomatoIn();
 
 
     isTransitioning =
         false;
+
 
     startButton.disabled =
         false;
@@ -905,51 +916,28 @@ async function animateBigTomatoToBasket() {
 
 async function animateNewBigTomatoIn() {
 
-    /*
-        Make sure the new tomato is
-        the still version.
-    */
-
     showStillTomato();
 
 
-    /*
-        Keep timer content invisible
-        while tomato falls in.
-    */
+    // Keep timer content hidden
+    // while tomato falls.
 
     tomatoContent.style.opacity =
         "0";
 
 
-    /*
-        Make the tomato visible again.
-    */
-
     tomato.style.opacity =
         "1";
 
 
-    /*
-        Start well above the screen.
-
-        We use the tomato's position
-        so this works on different
-        screen sizes.
-    */
-
     const tomatoRect =
         tomato.getBoundingClientRect();
+
 
     const distanceFromTop =
         tomatoRect.bottom +
         150;
 
-
-    /*
-        New tomato drops down and
-        does a tiny bounce/squish.
-    */
 
     const entranceAnimation =
         tomato.animate(
@@ -995,10 +983,9 @@ async function animateNewBigTomatoIn() {
     entranceAnimation.cancel();
 
 
-    /*
-        Fade the break timer and
-        controls back in.
-    */
+    // -------------------------
+    // FADE TIMER CONTENT BACK IN
+    // -------------------------
 
     const contentAppear =
         tomatoContent.animate(
@@ -1073,7 +1060,9 @@ function basketImpact() {
         "basket-impact"
     );
 
+
     void basket.offsetWidth;
+
 
     basket.classList.add(
         "basket-impact"
@@ -1167,7 +1156,6 @@ function renderBasket(
 
 
     const rotations = [
-
         "-8deg",
         "5deg",
         "-3deg",
@@ -1176,7 +1164,6 @@ function renderBasket(
         "3deg",
         "-4deg",
         "7deg"
-
     ];
 
 
