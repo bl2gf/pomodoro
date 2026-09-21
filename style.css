@@ -1,267 +1,1314 @@
+/* =========================================
+   GENERAL
+========================================= */
+@font-face {
+    font-family: "MyHandwriting";
+    src: url("assets/fonts/HandwrittenMadness-Regular.otf") format("opentype");
+    font-weight: normal;
+    font-style: normal;
+}
 * {
     box-sizing: border-box;
 }
 
+
 body {
     margin: 0;
+
     min-height: 100vh;
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    background-color: #fff3df;
 
-    font-family: Arial, sans-serif;
-
-    background-color: #fff8f0;
+    color: #542c20;
+    font-family: "MyHandwriting", cursive;
 }
 
 
-.timer-container {
+body.modal-open {
+    overflow: hidden;
+}
+
+
+.app {
     width: 90%;
-    max-width: 500px;
+    max-width: 900px;
+
+    margin: 0 auto;
+
+    padding:
+        35px
+        20px
+        80px;
+
+    position: relative;
+}
+
+
+/* =========================================
+   HEADER
+========================================= */
+
+.page-header {
+    display: flex;
+
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+
+h1 {
+    margin: 0;
+
+    font-size: 54px;
+    font-weight: normal;
+
+    transform:
+        rotate(-3deg);
+}
+
+
+.small-message {
+    margin:
+        10px
+        20px
+        0
+        0;
+
+    font-size: 22px;
+
+    line-height: 1.1;
 
     text-align: center;
 
-    background-color: white;
-
-    padding: 40px;
-    margin: 40px 0;
-
-    border-radius: 20px;
-
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    transform:
+        rotate(5deg);
 }
 
 
-/* -----------------------
-   Headings
------------------------ */
+h3 {
+    margin-top: 0;
 
-h1 {
-    font-size: 40px;
+    font-size: 30px;
+    font-weight: normal;
+}
 
-    margin-bottom: 25px;
+
+/* =========================================
+   BIG TOMATO
+========================================= */
+
+.tomato {
+    width: 800px;
+    height: 670px;
+
+    max-width: 100%;
+
+    margin:
+        25px
+        auto
+        0;
+
+    position: relative;
+
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    z-index: 5;
+}
+
+
+.big-tomato-image {
+    width: 100%;
+    height: 100%;
+
+    position: absolute;
+
+    inset: 0;
+
+    object-fit: contain;
+
+    z-index: 1;
+
+    pointer-events: none;
+
+    user-select: none;
+}
+
+
+/* =========================================
+   TIMER CONTENT
+========================================= */
+
+.tomato-content {
+    width: 100%;
+
+    position: relative;
+
+    z-index: 2;
+
+    text-align: center;
+
+    color: #fff3df;
+
+    /*
+    Change this number if the timer
+    needs to move up or down inside
+    your tomato artwork.
+
+    Positive = down
+    Negative = up
+    */
+
+    transform:
+        translateY(60px);
 }
 
 
 #modeDisplay {
-    font-size: 20px;
+    display: inline-block;
+
+    margin:
+        0
+        0
+        10px;
+
+    padding-bottom: 4px;
+
+    font-size: 32px;
     font-weight: normal;
 
-    margin-bottom: 10px;
+    /*border-bottom:*/
+    /*    2px solid*/
+    /*    #fff3df;*/
 }
 
 
-/* -----------------------
-   Timer
------------------------ */
-
 .timer-editor {
     display: flex;
+
     flex-direction: column;
 
     align-items: center;
-    justify-content: center;
 
-    margin: 20px 0 30px;
+    margin-bottom: 20px;
 }
 
 
 #timer {
-    font-size: 80px;
-    font-weight: bold;
+    margin:
+        6px
+        0;
+
+    color: #fff3df;
+
+    font-size: 110px;
 
     line-height: 1;
 
-    margin: 8px 0;
-
-    font-variant-numeric: tabular-nums;
+    font-variant-numeric:
+        tabular-nums;
 }
 
 
-/* -----------------------
-   Time Adjustment Arrows
------------------------ */
+/* =========================================
+   TIMER ARROWS
+========================================= */
 
 .time-adjust-button {
-    border: none;
+    padding:
+        2px
+        35px;
 
     background: transparent;
 
-    padding: 4px 30px;
+    color: #fff3df;
 
-    font-size: 18px;
+    border: none;
 
-    color: #999999;
+    font-size: 22px;
 
     cursor: pointer;
 
     transition:
-        color 0.15s ease,
-        transform 0.15s ease;
+        transform 0.15s ease,
+        opacity 0.15s ease;
 }
 
 
 .time-adjust-button:hover {
-    color: #d94c4c;
-
-    transform: scale(1.15);
+    transform:
+        scale(1.25);
 }
 
 
 .time-adjust-button:disabled {
     opacity: 0;
 
-    cursor: default;
+    pointer-events: none;
+}
+
+
+/* =========================================
+   START / RESET
+========================================= */
+
+.controls {
+    display: flex;
+
+    justify-content: center;
+
+    gap: 20px;
+}
+
+
+.controls button {
+    min-width: 140px;
+
+    padding:
+        10px
+        25px;
+
+    background-color: #fff3df;
+
+    color: #542c20;
+
+    border:
+        3px solid
+        #542c20;
+
+    border-radius: 25px;
+
+    font-family:
+        "Patrick Hand",
+        cursive;
+
+    font-size: 24px;
+
+    cursor: pointer;
+
+    box-shadow:
+        2px
+        3px
+        0
+        rgba(
+            80,
+            35,
+            25,
+            0.3
+        );
+}
+
+
+.controls button:hover {
+    transform:
+        translateY(-2px);
+}
+
+
+.controls button:active {
+    transform:
+        translateY(2px);
+
+    box-shadow: none;
+}
+
+
+/* =========================================
+   FALLING TOMATO AREA
+========================================= */
+
+#fallingTomatoArea {
+    height: 130px;
+
+    position: relative;
 
     pointer-events: none;
 }
 
 
-/* -----------------------
-   Timer Controls
------------------------ */
+/* =========================================
+   FALLING TOMATO
+========================================= */
 
-.controls {
-    display: flex;
-    justify-content: center;
+.falling-tomato {
+    width: 65px;
+    height: 58px;
 
-    gap: 10px;
+    position: absolute;
+
+    left: 50%;
+    top: -60px;
+
+    z-index: 20;
+
+    background-color: #912B23;
+
+    border:
+        3px solid
+        #542c20;
+
+    border-radius:
+        50% 50%
+        45% 45%;
+
+    animation:
+        tomatoFall
+        1.15s
+        cubic-bezier(
+            .35,
+            .05,
+            .55,
+            1
+        )
+        forwards;
 }
 
 
-button {
-    padding: 12px 25px;
+.falling-tomato::before {
+    content: "";
 
-    border: none;
-    border-radius: 10px;
+    width: 25px;
+    height: 12px;
 
-    font-size: 16px;
+    position: absolute;
 
-    cursor: pointer;
+    left: 17px;
+    top: -8px;
+
+    background-color: #657a3c;
+
+    border:
+        2px solid
+        #3e4929;
+
+    border-radius:
+        100% 0
+        100% 0;
 }
 
 
-#startButton {
-    background-color: #d94c4c;
+.falling-tomato::after {
+    content: "⌣";
 
-    color: white;
+    position: absolute;
+
+    left: 19px;
+    top: 15px;
+
+    color: #542c20;
+
+    font-size: 26px;
 }
 
 
-#resetButton {
-    background-color: #eeeeee;
+@keyframes tomatoFall {
+
+    0% {
+        top: -70px;
+
+        transform:
+            translateX(-50%)
+            rotate(-12deg)
+            scale(1);
+    }
+
+
+    45% {
+        transform:
+            translateX(-50%)
+            rotate(8deg)
+            scale(1);
+    }
+
+
+    72% {
+        top: 88px;
+
+        transform:
+            translateX(-50%)
+            rotate(15deg)
+            scale(1);
+    }
+
+
+    84% {
+        top: 75px;
+
+        transform:
+            translateX(-50%)
+            rotate(-6deg)
+            scale(0.95);
+    }
+
+
+    100% {
+        top: 100px;
+
+        transform:
+            translateX(-50%)
+            rotate(3deg)
+            scale(0.9);
+
+        opacity: 0;
+    }
 }
 
 
-button:hover {
-    opacity: 0.8;
+/* =========================================
+   BASKET SECTION
+========================================= */
+
+.basket-section {
+    width: 700px;
+
+    max-width: 100%;
+
+
+
+    margin:
+        20px
+        auto
+        45px;
+
+    text-align: center;
 }
 
 
-/* -----------------------
-   Task
------------------------ */
+/* =========================================
+   BASKET
+========================================= */
 
-.task-section {
-    margin-top: 40px;
+.basket {
+    width: 700px;
 
-    display: flex;
-    flex-direction: column;
+    max-width: 100%;
 
-    gap: 10px;
+    aspect-ratio:
+        1000 / 350;
+
+    margin:
+        0
+        auto;
+
+    position: relative;
+
+    transform-origin:
+        center bottom;
 }
 
 
-.task-section label {
-    font-weight: bold;
-}
+/* =========================================
+   YOUR BASKET IMAGE
+========================================= */
 
+.basket-image {
+    width: 100%;
+    height: 100%;
 
-#taskInput {
-    padding: 12px;
+    position: absolute;
 
-    border: 1px solid #cccccc;
-    border-radius: 8px;
-
-    font-size: 16px;
-}
-
-
-/* -----------------------
-   Tomato Tracker
------------------------ */
-
-.progress-section {
-    margin-top: 35px;
-}
-
-
-#tomatoTracker {
-    font-size: 30px;
-
-    min-height: 45px;
-
-    margin: 15px 0;
-}
-
-
-/*
-Use this later when you add
-your hand-drawn tomato image.
-*/
-.tomato {
-    width: 50px;
-    height: 50px;
+    left: 0;
+    bottom: 0;
 
     object-fit: contain;
 
-    margin: 4px;
+    z-index: 5;
+
+    pointer-events: none;
+
+    user-select: none;
 }
 
 
-/* -----------------------
-   Session History
------------------------ */
+/* =========================================
+   TOMATO PILE
+========================================= */
+
+#basketTomatoes {
+    width: 75%;
+
+    position: absolute;
+
+    left: 12.5%;
+
+    bottom: 80%;
+
+    z-index: 3;
+
+    display: flex;
+
+    justify-content: center;
+    align-items: flex-end;
+
+    flex-wrap:
+        wrap-reverse;
+}
+
+
+/* =========================================
+   BASKET TOMATO
+========================================= */
+
+.basket-tomato {
+    width: 68px;
+    height: 60px;
+
+    margin:
+        -5px
+        -4px;
+
+    position: relative;
+
+    background-color: #912B23;
+
+    border:
+        3px solid
+        #542c20;
+
+    border-radius:
+        50% 50%
+        45% 45%;
+
+    transform:
+        rotate(
+            var(--rotation)
+        );
+
+    transform-origin:
+        center bottom;
+
+    will-change:
+        transform;
+}
+
+
+/* Tomato leaf */
+
+.basket-tomato::before {
+    content: "";
+
+    width: 28px;
+    height: 13px;
+
+    position: absolute;
+
+    left: 18px;
+    top: -9px;
+
+    background-color: #657a3c;
+
+    border:
+        2px solid
+        #3e4929;
+
+    border-radius:
+        100% 0
+        100% 0;
+}
+
+
+/* Tomato face */
+
+.basket-tomato::after {
+    content: "⌣";
+
+    position: absolute;
+
+    left: 20px;
+    top: 15px;
+
+    color: #542c20;
+
+    font-size: 27px;
+}
+
+
+/* =========================================
+   BASKET IMPACT
+========================================= */
+
+.basket.basket-impact {
+    animation:
+        basketImpact
+        0.55s
+        ease-out;
+}
+
+
+@keyframes basketImpact {
+
+    0% {
+        transform:
+            translateY(0)
+            rotate(0deg);
+    }
+
+
+    25% {
+        transform:
+            translateY(5px)
+            rotate(-1deg);
+    }
+
+
+    50% {
+        transform:
+            translateY(-2px)
+            rotate(0.8deg);
+    }
+
+
+    75% {
+        transform:
+            translateY(1px)
+            rotate(-0.3deg);
+    }
+
+
+    100% {
+        transform:
+            translateY(0)
+            rotate(0deg);
+    }
+}
+
+
+/* =========================================
+   IDLE TOMATO WIGGLE
+========================================= */
+
+.basket-tomato.idle-wiggle {
+    animation:
+        tomatoIdleWiggle
+        0.7s
+        ease-in-out;
+}
+
+
+@keyframes tomatoIdleWiggle {
+
+    0% {
+        transform:
+            translateX(0)
+            translateY(0)
+            rotate(
+                var(--rotation)
+            );
+    }
+
+
+    25% {
+        transform:
+            translateX(-2px)
+            translateY(-1px)
+            rotate(
+                calc(
+                    var(--rotation)
+                    - 3deg
+                )
+            );
+    }
+
+
+    50% {
+        transform:
+            translateX(2px)
+            translateY(-2px)
+            rotate(
+                calc(
+                    var(--rotation)
+                    + 3deg
+                )
+            );
+    }
+
+
+    75% {
+        transform:
+            translateX(-1px)
+            translateY(0)
+            rotate(
+                calc(
+                    var(--rotation)
+                    - 1deg
+                )
+            );
+    }
+
+
+    100% {
+        transform:
+            translateX(0)
+            translateY(0)
+            rotate(
+                var(--rotation)
+            );
+    }
+}
+
+
+/* =========================================
+   NEW TOMATO LANDING
+========================================= */
+
+.basket-tomato.new-tomato {
+    animation:
+        tomatoLand
+        0.7s
+        ease-out;
+}
+
+
+@keyframes tomatoLand {
+
+    0% {
+        transform:
+            translateY(-45px)
+            rotate(-12deg)
+            scale(1.08);
+    }
+
+
+    45% {
+        transform:
+            translateY(5px)
+            rotate(
+                calc(
+                    var(--rotation)
+                    + 6deg
+                )
+            )
+            scaleX(1.12)
+            scaleY(0.88);
+    }
+
+
+    65% {
+        transform:
+            translateY(-7px)
+            rotate(
+                calc(
+                    var(--rotation)
+                    - 3deg
+                )
+            );
+    }
+
+
+    100% {
+        transform:
+            translateY(0)
+            rotate(
+                var(--rotation)
+            );
+    }
+}
+
+
+/* =========================================
+   TOMATO PILE REACTION
+========================================= */
+
+.basket-tomato.tomato-jiggle {
+    animation:
+        tomatoJiggle
+        0.55s
+        ease-out;
+}
+
+
+@keyframes tomatoJiggle {
+
+    0% {
+        transform:
+            translateX(0)
+            translateY(0)
+            rotate(
+                var(--rotation)
+            );
+    }
+
+
+    25% {
+        transform:
+            translateX(-3px)
+            translateY(-4px)
+            rotate(
+                calc(
+                    var(--rotation)
+                    - 4deg
+                )
+            );
+    }
+
+
+    50% {
+        transform:
+            translateX(3px)
+            translateY(1px)
+            rotate(
+                calc(
+                    var(--rotation)
+                    + 3deg
+                )
+            );
+    }
+
+
+    100% {
+        transform:
+            translateX(0)
+            translateY(0)
+            rotate(
+                var(--rotation)
+            );
+    }
+}
+
+
+/* =========================================
+   BASKET COUNT
+========================================= */
+
+.basket-count {
+    margin-top: 15px;
+
+    font-size: 23px;
+}
+
+
+/* =========================================
+   SESSION HISTORY
+========================================= */
 
 .history-section {
-    margin-top: 35px;
+    width: 650px;
 
-    padding-top: 20px;
+    max-width: 100%;
 
-    border-top: 1px solid #dddddd;
+    margin:
+        0
+        auto;
+
+    padding: 25px;
+
+    border:
+        2px solid
+        #e2b995;
+
+    border-radius: 20px;
 }
 
 
 .session {
+    padding:
+        11px
+        4px;
+
     text-align: left;
 
-    padding: 15px;
+    border-bottom:
+        1px solid
+        #d7b99c;
+}
 
-    margin: 10px 0;
 
-    background-color: #fff8f0;
-
-    border-radius: 10px;
+.session:last-child {
+    border-bottom: none;
 }
 
 
 .session-task {
-    font-weight: bold;
+    font-size: 22px;
 }
 
 
 .session-time {
-    font-size: 14px;
+    margin-top: 2px;
 
-    margin-top: 5px;
+    color: #8b7060;
 
-    color: #666666;
+    font-size: 17px;
 }
 
 
 #totalFocusTime {
+    margin-bottom: 0;
+
+    font-size: 23px;
+}
+
+
+/* =========================================
+   BOTTOM MESSAGE
+========================================= */
+
+.bottom-message {
+    margin-top: 40px;
+
+    text-align: center;
+
+    font-size: 24px;
+
+    transform:
+        rotate(-2deg);
+}
+
+
+/* =========================================
+   MODAL
+========================================= */
+.modal-close-button {
+    position: absolute;
+
+    top: 12px;
+    right: 16px;
+
+    padding: 0;
+
+    background: transparent;
+
+    color: #542c20;
+
+    border: none;
+
+    font-family: inherit;
+    font-size: 32px;
+    line-height: 1;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.15s ease,
+        opacity 0.15s ease;
+}
+
+.modal-close-button:hover {
+    transform: rotate(8deg) scale(1.15);
+    opacity: 0.7;
+}
+.modal-overlay {
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 100;
+
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    padding: 20px;
+
+    background-color:
+        rgba(
+            84,
+            44,
+            32,
+            0.35
+        );
+
+    backdrop-filter:
+        blur(4px);
+}
+
+
+.modal-overlay.hidden {
+    display: none;
+}
+
+
+.accomplishment-card {
+    position: relative;
+    width: 440px;
+
+    max-width: 100%;
+
+    padding: 35px;
+
+    background-color: #fff3df;
+
+    border:
+        4px solid
+        #542c20;
+
+    border-radius:
+        25px 22px
+        27px 20px;
+
+    text-align: center;
+
+    box-shadow:
+        7px
+        9px
+        0
+        rgba(
+            84,
+            44,
+            32,
+            0.2
+        );
+
+    transform:
+        rotate(-1deg);
+
+    animation:
+        cardAppear
+        0.25s
+        ease-out;
+}
+
+
+@keyframes cardAppear {
+
+    from {
+        opacity: 0;
+
+        transform:
+            rotate(-1deg)
+            translateY(20px)
+            scale(0.95);
+    }
+
+
+    to {
+        opacity: 1;
+
+        transform:
+            rotate(-1deg)
+            translateY(0)
+            scale(1);
+    }
+}
+
+
+.accomplishment-card h2 {
+    margin:
+        10px
+        0
+        20px;
+
+    font-size: 35px;
+
+    font-weight: normal;
+}
+
+
+.accomplishment-card label {
+    display: block;
+
+    margin-bottom: 10px;
+
+    font-size: 27px;
+}
+
+
+#accomplishmentInput {
+    width: 100%;
+
+    min-height: 110px;
+
+    padding: 14px;
+
+    resize: vertical;
+
+    background-color: #fffaf0;
+
+    color: #542c20;
+
+    border:
+        3px solid
+        #542c20;
+
+    border-radius: 12px;
+
+    outline: none;
+
+    font-family:
+        "Patrick Hand",
+        cursive;
+
+    font-size: 21px;
+}
+
+
+#accomplishmentInput:focus {
+    border-color:
+        #e94b3c;
+}
+
+
+#saveAccomplishmentButton {
     margin-top: 20px;
 
-    font-weight: bold;
+    padding:
+        10px
+        25px;
+
+    background-color: #e94b3c;
+
+    color: #fff3df;
+
+    border:
+        3px solid
+        #542c20;
+
+    border-radius: 25px;
+
+    font-family:
+        "Patrick Hand",
+        cursive;
+
+    font-size: 23px;
+
+    cursor: pointer;
+
+    box-shadow:
+        2px
+        3px
+        0
+        rgba(
+            84,
+            44,
+            32,
+            0.25
+        );
+}
+
+
+#saveAccomplishmentButton:hover {
+    transform:
+        translateY(-2px);
+}
+
+
+/* =========================================
+   MINI TOMATO
+========================================= */
+
+.mini-tomato {
+    width: 75px;
+    height: 68px;
+
+    margin:
+        0
+        auto;
+
+    position: relative;
+
+    background-color: #912B23;
+
+    border:
+        3px solid
+        #542c20;
+
+    border-radius:
+        50% 50%
+        45% 45%;
+}
+
+
+.mini-leaf {
+    width: 32px;
+    height: 15px;
+
+    position: absolute;
+
+    left: 20px;
+    top: -11px;
+
+    background-color: #657a3c;
+
+    border:
+        2px solid
+        #3e4929;
+
+    border-radius:
+        100% 0
+        100% 0;
+}
+
+
+.mini-face {
+    margin-top: 14px;
+
+    font-size: 32px;
+
+    color: #542c20;
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 700px) {
+
+    .app {
+        width: 96%;
+
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+
+
+    h1 {
+        font-size: 42px;
+    }
+
+
+    .small-message {
+        font-size: 18px;
+    }
+
+
+    .tomato {
+        width: 95%;
+
+        height:
+            clamp(
+                330px,
+                82vw,
+                620px
+            );
+
+        margin-top: 20px;
+    }
+
+
+    .tomato-content {
+        transform:
+            translateY(35px);
+    }
+
+
+    #timer {
+        font-size: 78px;
+    }
+
+
+    #modeDisplay {
+        font-size: 30px;
+    }
+
+
+    .controls button {
+        min-width: 105px;
+
+        font-size: 21px;
+    }
+
+
+    .basket-section {
+        width: 95%;
+    }
+
+
+    .basket-tomato {
+        width: 52px;
+        height: 46px;
+    }
 }

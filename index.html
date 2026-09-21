@@ -3,114 +3,237 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Pomodoro Tracker</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap"
+        rel="stylesheet"
+    >
 
     <link rel="stylesheet" href="style.css">
 </head>
 
+
 <body>
 
-    <main class="timer-container">
+    <main class="app">
 
-        <h1>🍅 Pomodoro</h1>
+        <!-- =====================================
+             HEADER
+        ====================================== -->
 
-        <!-- Focus / Break indicator -->
-        <h2 id="modeDisplay">
-            Focus Time
-        </h2>
+        <header class="page-header">
+
+            <h1>Pomodoro ♡</h1>
+
+            <p class="small-message">
+                i am a<br>
+                big tomato ♡
+            </p>
+
+        </header>
 
 
-        <!-- Editable Timer -->
-        <div class="timer-editor">
+        <!-- =====================================
+             BIG TOMATO TIMER
+        ====================================== -->
 
-            <button
-                id="increaseTimeButton"
-                class="time-adjust-button"
-                aria-label="Increase focus time"
+        <section class="tomato">
+
+            <img
+                id="bigPomoImage"
+                src="assets/bigPomo.png"
+                alt=""
+                class="big-tomato-image"
             >
-                ▲
-            </button>
 
-            <div id="timer">
-                25:00
+
+            <div class="tomato-content">
+
+                <h2 id="modeDisplay">
+                    Focus Time
+                </h2>
+
+
+                <div class="timer-editor">
+
+                    <button
+                        id="increaseTimeButton"
+                        class="time-adjust-button"
+                        aria-label="Increase focus time"
+                    >
+                        ▲
+                    </button>
+
+
+                    <div id="timer">
+                        25:00
+                    </div>
+
+
+                    <button
+                        id="decreaseTimeButton"
+                        class="time-adjust-button"
+                        aria-label="Decrease focus time"
+                    >
+                        ▼
+                    </button>
+
+                </div>
+
+
+                <div class="controls">
+
+                    <button id="startButton">
+                        Start
+                    </button>
+
+                    <button id="resetButton">
+                        Reset
+                    </button>
+
+                </div>
+
             </div>
 
-            <button
-                id="decreaseTimeButton"
-                class="time-adjust-button"
-                aria-label="Decrease focus time"
-            >
-                ▼
-            </button>
-
-        </div>
+        </section>
 
 
-        <!-- Timer Controls -->
-        <div class="controls">
+        <!-- =====================================
+             FALLING TOMATO
+        ====================================== -->
 
-            <button id="startButton">
-                Start
-            </button>
-
-            <button id="resetButton">
-                Reset
-            </button>
-
-        </div>
+        <div id="fallingTomatoArea"></div>
 
 
-        <!-- Current Task -->
-        <div class="task-section">
+        <!-- =====================================
+             BASKET
+        ====================================== -->
 
-            <label for="taskInput">
-                What are you working on?
-            </label>
+        <section class="basket-section">
 
-            <input
-                type="text"
-                id="taskInput"
-                placeholder="e.g. LeetCode matrix practice"
+            <div
+                id="basket"
+                class="basket"
             >
 
-        </div>
+                <div id="basketTomatoes"></div>
 
 
-        <!-- Completed Pomodoros -->
-        <div class="progress-section">
+                <!--
+                    Your Procreate basket artwork.
+                -->
 
-            <h3>Today's Pomodoros</h3>
+                <img
+                    src="assets/basket.png"
+                    alt="Basket of completed Pomodoros"
+                    class="basket-image"
+                >
 
-            <div id="tomatoTracker">
-                No pomodoros completed yet!
             </div>
 
-            <p>
+
+            <p class="basket-count">
                 Completed:
                 <span id="completedCount">0</span>
             </p>
 
-        </div>
+        </section>
 
 
-        <!-- Session History -->
-        <div class="history-section">
+        <!-- =====================================
+             SESSION HISTORY
+        ====================================== -->
 
-            <h3>Today's Sessions</h3>
+        <section class="history-section">
+
+            <h3>
+                Today's Sessions
+            </h3>
+
 
             <div id="sessionHistory">
-                No sessions yet!
+                No sessions yet ♡
             </div>
+
 
             <p id="totalFocusTime">
                 Total focus time: 0 minutes
             </p>
 
-        </div>
+        </section>
+
+
+        <p class="bottom-message">
+            you can do this ♡
+        </p>
 
     </main>
+
+
+    <!-- =====================================
+         ACCOMPLISHMENT MODAL
+    ====================================== -->
+
+    <div
+        id="accomplishmentModal"
+        class="modal-overlay hidden"
+    >
+
+        <div class="accomplishment-card">
+            <button
+                id="closeAccomplishmentButton"
+                class="modal-close-button"
+                aria-label="Skip accomplishment"
+            >
+                ×
+            </button>
+
+            <div class="mini-tomato">
+
+                <div class="mini-leaf"></div>
+
+                <div class="mini-face">
+                    ◡
+                </div>
+
+            </div>
+
+
+            <h2>
+                You did it! ♡
+            </h2>
+
+
+            <label for="accomplishmentInput">
+                What did you accomplish?
+            </label>
+
+
+            <textarea
+                id="accomplishmentInput"
+                placeholder="e.g. Finished three LeetCode problems..."
+                maxlength="200"
+            ></textarea>
+
+
+            <button id="saveAccomplishmentButton">
+                Add to Basket 🍅
+            </button>
+
+        </div>
+
+    </div>
+
 
     <script src="script.js"></script>
 
